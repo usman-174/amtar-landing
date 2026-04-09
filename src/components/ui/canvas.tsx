@@ -156,12 +156,28 @@ function Node() {
   (this as any).vx = 0;
 }
 
-export const renderCanvas = function () {
-  ctx = (document.getElementById("canvas") as HTMLCanvasElement).getContext(
-    "2d"
-  ) as CanvasRenderingContext2D;
-  (ctx as any).running = true;
-  (ctx as any).frame = 1;
+export const renderCanvas = function (options?: { enabled?: boolean; trails?: number; size?: number }) {
+  if (options?.enabled === false) {
+    return () => {}
+  }
+
+  const canvas = document.getElementById("canvas") as HTMLCanvasElement | null
+  const nextCtx = canvas?.getContext("2d")
+  if (!canvas || !nextCtx) {
+    return () => {}
+  }
+
+  ctx = nextCtx as CanvasRenderingContext2D
+  ;(ctx as any).running = true
+  ;(ctx as any).frame = 1
+
+  if (typeof options?.trails === "number") {
+    E.trails = Math.max(0, Math.floor(options.trails))
+  }
+  if (typeof options?.size === "number") {
+    E.size = Math.max(0, Math.floor(options.size))
+  }
+
   f = new WaveGenerator({
     phase: Math.random() * 2 * Math.PI,
     amplitude: 85,
@@ -172,14 +188,26 @@ export const renderCanvas = function () {
   document.addEventListener("touchstart", onMousemove as any);
   document.body.addEventListener("orientationchange", resizeCanvas);
   window.addEventListener("resize", resizeCanvas);
-  window.addEventListener("focus", () => {
+  const onFocus = () => {
     if (!(ctx as any).running) {
-      (ctx as any).running = true;
-      render();
+      ;(ctx as any).running = true
+      render()
     }
-  });
-  window.addEventListener("blur", () => {
-    (ctx as any).running = true;
-  });
+  }
+  const onBlur = () => {
+    ;(ctx as any).running = false
+  }
+  window.addEventListener("focus", onFocus)
+  window.addEventListener("blur", onBlur)
   resizeCanvas();
+
+  return () => {
+    ;(ctx as any).running = false
+    document.removeEventListener("mousemove", onMousemove as any)
+    document.removeEventListener("touchstart", onMousemove as any)
+    document.body.removeEventListener("orientationchange", resizeCanvas)
+    window.removeEventListener("resize", resizeCanvas)
+    window.removeEventListener("focus", onFocus)
+    window.removeEventListener("blur", onBlur)
+  }
 };
