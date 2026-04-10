@@ -120,7 +120,7 @@ export function NavBar({
   }, [shouldRunHeavyAnimations])
 
   return (
-    <header ref={rootRef} className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/55 backdrop-blur-xl">
+    <header ref={rootRef} className="sticky top-0 z-50 border-b border-white/10 bg-slate-900/80 backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 md:px-8">
         <Link to="/" className="group flex items-center gap-3">
           <img src="/images/amtar-logo.png" alt="Amtar" className="h-10 w-auto" />
@@ -132,7 +132,7 @@ export function NavBar({
         <div className="hidden items-center gap-2 md:flex">
           <div
             ref={railRef}
-            className="relative flex items-center gap-1 rounded-full border border-white/10 bg-slate-950/30 p-1 text-sm text-slate-200 shadow-sm"
+            className="relative flex items-center gap-1 rounded-full border border-white/12 bg-slate-800/50 p-1 text-sm text-slate-200 shadow-sm"
           >
             <div
               ref={pillRef}
@@ -173,7 +173,7 @@ export function NavBar({
         <div className="flex items-center gap-2">
           <Button
             variant="outline"
-            className="rounded-full border-white/15 bg-slate-950/25 px-5 text-blue-200 hover:bg-slate-950/35"
+            className="rounded-full border-white/15 bg-slate-800/45 px-5 text-blue-200 hover:bg-slate-800/60"
             onClick={onToggleLanguage}
           >
             <Globe2 className="mr-2 h-4 w-4" />
@@ -193,7 +193,7 @@ export function NavBar({
           <button
             type="button"
             onClick={() => setMobileOpen((v) => !v)}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-slate-950/30 text-slate-200 shadow-sm md:hidden"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/12 bg-slate-800/50 text-slate-200 shadow-sm md:hidden"
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
           >
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -202,7 +202,7 @@ export function NavBar({
       </div>
 
       {mobileOpen ? (
-        <div className="border-t border-white/10 bg-slate-950/60 backdrop-blur-xl md:hidden">
+        <div className="border-t border-white/10 bg-slate-900/90 backdrop-blur-xl md:hidden">
           <div className="mx-auto max-w-7xl px-4 py-4">
             <div className="grid gap-2">
               {items.map((item) =>
@@ -211,7 +211,7 @@ export function NavBar({
                     key={item.key}
                     to={item.to}
                     onClick={() => setMobileOpen(false)}
-                    className="rounded-2xl border border-white/10 bg-slate-950/35 px-4 py-3 text-sm font-medium text-slate-100 shadow-sm"
+                    className="rounded-2xl border border-white/12 bg-slate-800/55 px-4 py-3 text-sm font-medium text-slate-100 shadow-sm"
                   >
                     {item.label}
                   </Link>
@@ -223,7 +223,7 @@ export function NavBar({
                       setMobileOpen(false)
                       runToSection(item.to)
                     }}
-                    className="rounded-2xl border border-white/10 bg-slate-950/35 px-4 py-3 text-left text-sm font-medium text-slate-100 shadow-sm"
+                    className="rounded-2xl border border-white/12 bg-slate-800/55 px-4 py-3 text-left text-sm font-medium text-slate-100 shadow-sm"
                   >
                     {item.label}
                   </button>

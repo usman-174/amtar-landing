@@ -7,6 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger"
 
 import { buttonVariants, Button } from "@/components/ui/button"
 import { NavBar } from "@/components/NavBar"
+import { SiteFooter } from "@/components/SiteFooter"
 import { useMotionPolicy } from "@/hooks/useMotionPolicy"
 import { cn } from "@/lib/utils"
 
@@ -48,11 +49,11 @@ export default function Contact() {
   const toggleLanguage = () => i18n.changeLanguage(isRTL ? "en" : "ar")
 
   return (
-    <div ref={rootRef} className="relative min-h-screen overflow-x-hidden bg-slate-950 text-slate-50">
+    <div ref={rootRef} className="relative min-h-screen overflow-x-hidden bg-slate-900 text-slate-50">
       <style>{`
         .glass-panel {
-          background: rgba(3, 7, 18, 0.55);
-          border: 1px solid rgba(255, 255, 255, 0.10);
+          background: rgba(30, 41, 59, 0.72);
+          border: 1px solid rgba(255, 255, 255, 0.12);
           backdrop-filter: blur(18px);
         }
       `}</style>
@@ -61,7 +62,7 @@ export default function Contact() {
 
       <main className="relative z-10 px-4 pb-24 pt-14 md:px-8 md:pt-20">
         <section className="mx-auto max-w-7xl">
-          <div className="relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-slate-950/35 p-8 shadow-xl shadow-blue-500/10 md:p-14">
+          <div className="relative overflow-hidden rounded-[2.5rem] border border-white/12 bg-slate-800/50 p-8 shadow-xl shadow-blue-500/10 md:p-14">
             <div
               className="pointer-events-none absolute inset-0"
               style={{
@@ -74,7 +75,7 @@ export default function Contact() {
               <div>
                 <p
                   data-contact-anim="true"
-                  className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-slate-950/30 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-blue-200"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-slate-800/45 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-blue-200"
                 >
                   <Sparkles className="h-3.5 w-3.5" />
                   {t("contact.badge")}
@@ -131,7 +132,7 @@ export default function Contact() {
                     <label className="text-sm font-medium text-slate-200">{t("contact.form.name")}</label>
                     <input
                       required
-                      className="h-11 rounded-xl border border-white/10 bg-slate-950/35 px-4 text-sm text-slate-100 outline-none placeholder:text-slate-400 focus:border-blue-400/40 focus:ring-2 focus:ring-blue-500/20"
+                      className="h-11 rounded-xl border border-white/12 bg-slate-800/45 px-4 text-sm text-slate-100 outline-none placeholder:text-slate-400 focus:border-blue-400/40 focus:ring-2 focus:ring-blue-500/20"
                       name="name"
                       placeholder={t("contact.form.namePlaceholder")}
                     />
@@ -142,7 +143,7 @@ export default function Contact() {
                     <input
                       required
                       type="email"
-                      className="h-11 rounded-xl border border-white/10 bg-slate-950/35 px-4 text-sm text-slate-100 outline-none placeholder:text-slate-400 focus:border-blue-400/40 focus:ring-2 focus:ring-blue-500/20"
+                      className="h-11 rounded-xl border border-white/12 bg-slate-800/45 px-4 text-sm text-slate-100 outline-none placeholder:text-slate-400 focus:border-blue-400/40 focus:ring-2 focus:ring-blue-500/20"
                       name="email"
                       placeholder={t("contact.form.emailPlaceholder")}
                     />
@@ -152,7 +153,7 @@ export default function Contact() {
                     <label className="text-sm font-medium text-slate-200">{t("contact.form.message")}</label>
                     <textarea
                       required
-                      className="min-h-32 resize-none rounded-xl border border-white/10 bg-slate-950/35 px-4 py-3 text-sm leading-relaxed text-slate-100 outline-none placeholder:text-slate-400 focus:border-blue-400/40 focus:ring-2 focus:ring-blue-500/20"
+                      className="min-h-32 resize-none rounded-xl border border-white/12 bg-slate-800/45 px-4 py-3 text-sm leading-relaxed text-slate-100 outline-none placeholder:text-slate-400 focus:border-blue-400/40 focus:ring-2 focus:ring-blue-500/20"
                       name="message"
                       placeholder={t("contact.form.messagePlaceholder")}
                     />
@@ -166,7 +167,7 @@ export default function Contact() {
                       href="mailto:hello@amtar.sa?subject=Amtar%20Inquiry"
                       className={cn(
                         buttonVariants({ variant: "outline" }),
-                        "h-11 rounded-full border-white/15 bg-slate-950/25 px-7 text-teal-200 hover:bg-slate-950/35"
+                        "h-11 rounded-full border-white/15 bg-slate-800/45 px-7 text-teal-200 hover:bg-slate-800/60"
                       )}
                     >
                       {t("contact.form.emailUs")}
@@ -184,6 +185,8 @@ export default function Contact() {
           </div>
         </section>
       </main>
+
+      <SiteFooter useAbsoluteHash />
     </div>
   )
 }
