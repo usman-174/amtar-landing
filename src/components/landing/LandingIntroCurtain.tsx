@@ -1,27 +1,118 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"
-import { motion } from "framer-motion"
 import { useTranslation } from "react-i18next"
 
-import { useMotionPolicy } from "@/hooks/useMotionPolicy"
+const CURTAIN_CSS = `
+.intro-curtain-root {
+  font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+  -webkit-font-smoothing: antialiased;
+}
+.intro-curtain-grid {
+  background-size: 60px 60px;
+  background-image:
+    linear-gradient(to right, rgba(148, 163, 184, 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(148, 163, 184, 0.07) 1px, transparent 1px);
+  mask-image: linear-gradient(to bottom, transparent, black 14%, black 88%, transparent);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, black 14%, black 88%, transparent);
+}
+.intro-curtain-giant {
+  font-size: min(24vw, 13rem);
+  line-height: 0.78;
+  font-weight: 900;
+  letter-spacing: -0.06em;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(148, 163, 184, 0.12);
+  background: linear-gradient(180deg, rgba(226, 232, 240, 0.12) 0%, transparent 62%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  opacity: 0.65;
+}
+.intro-curtain-headline {
+  background: linear-gradient(180deg, #f8fafc 0%, rgba(96, 165, 250, 0.75) 55%, rgba(45, 212, 191, 0.55) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 12px 40px rgba(11, 59, 255, 0.22));
+}
+.intro-curtain-glass-btn {
+  background: rgba(30, 41, 59, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 20px 50px rgba(11, 59, 255, 0.12);
+}
+@keyframes curtain-robot-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.curtain-robot-float {
+  animation: curtain-robot-float 5.5s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .curtain-robot-float { animation: none; }
+}
+`
 
 /**
- * Full-screen intro curtain — wheel/touch peels it away; scroll stays at 0 until dismissed.
- * Matches site theme (slate-900, blue/teal glows, glass borders) with the robot as the hero backdrop.
+ * Full-screen intro curtain — wheel/touch peels it away; scroll locked until dismissed.
+ *
+ * Performance strategy: offset lives in a ref and is flushed to the DOM via a single
+ * requestAnimationFrame per input event. Zero React re-renders during the peel —
+ * only the final dismiss triggers a state update to unmount the component.
  */
-export function LandingIntroCurtain() {
+export function LandingIntroCurtain({ onDismiss }: { onDismiss?: () => void }) {
   const { t } = useTranslation()
-  const { shouldRunHeavyAnimations } = useMotionPolicy()
-  const [peelPx, setPeelPx] = useState(() =>
-    typeof window !== "undefined" ? Math.min(window.innerHeight, 900) : 800
-  )
-  const peelPxRef = useRef(peelPx)
-  peelPxRef.current = peelPx
-
-  const [offset, setOffset] = useState(0)
   const [done, setDone] = useState(false)
 
+  const rootRef = useRef<HTMLDivElement>(null)
+  const hintRef = useRef<HTMLDivElement>(null)
+  const offsetRef = useRef(0)
+  const peelPxRef = useRef(
+    typeof window !== "undefined" ? Math.min(window.innerHeight, 900) : 800,
+  )
+  const rafRef = useRef(0)
+  const doneRef = useRef(false)
+  const onDismissRef = useRef(onDismiss)
+  onDismissRef.current = onDismiss
+
+  const flushTransform = useCallback(() => {
+    rafRef.current = 0
+    const el = rootRef.current
+    if (el) el.style.transform = `translate3d(0,${-offsetRef.current}px,0)`
+    const hint = hintRef.current
+    if (hint) {
+      hint.style.opacity = String(
+        Math.max(0, 1 - offsetRef.current / (peelPxRef.current * 0.22)),
+      )
+    }
+  }, [])
+
+  const scheduleFlush = useCallback(() => {
+    if (!rafRef.current) rafRef.current = requestAnimationFrame(flushTransform)
+  }, [flushTransform])
+
+  const applyDelta = useCallback(
+    (delta: number) => {
+      if (doneRef.current) return
+      const max = peelPxRef.current
+      const next = Math.min(max, Math.max(0, offsetRef.current + delta))
+      offsetRef.current = next
+      if (next >= max * 0.985) {
+        doneRef.current = true
+        cancelAnimationFrame(rafRef.current)
+        setDone(true)
+        return
+      }
+      scheduleFlush()
+    },
+    [scheduleFlush],
+  )
+
+  const nudgePeel = useCallback(() => {
+    applyDelta(peelPxRef.current * 0.22)
+  }, [applyDelta])
+
   useEffect(() => {
-    const onResize = () => setPeelPx(Math.min(window.innerHeight, 900))
+    const onResize = () => {
+      peelPxRef.current = Math.min(window.innerHeight, 900)
+    }
     onResize()
     window.addEventListener("resize", onResize)
     return () => window.removeEventListener("resize", onResize)
@@ -32,6 +123,7 @@ export function LandingIntroCurtain() {
       document.documentElement.style.overflow = ""
       document.body.style.overflow = ""
       window.scrollTo(0, 0)
+      onDismissRef.current?.()
       return
     }
 
@@ -45,23 +137,6 @@ export function LandingIntroCurtain() {
     }
   }, [done])
 
-  const applyDelta = useCallback((delta: number) => {
-    if (done) return
-    const max = peelPxRef.current
-    setOffset((prev) => {
-      const next = Math.min(max, Math.max(0, prev + delta))
-      if (next >= max * 0.985) {
-        queueMicrotask(() => setDone(true))
-        return max
-      }
-      return next
-    })
-  }, [done])
-
-  const nudgePeel = useCallback(() => {
-    applyDelta(peelPxRef.current * 0.22)
-  }, [applyDelta])
-
   useEffect(() => {
     if (done) return
 
@@ -71,16 +146,27 @@ export function LandingIntroCurtain() {
     }
 
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "ArrowDown" || e.key === "PageDown" || e.key === " " || e.key === "Enter") {
+      if (
+        e.key === "ArrowDown" ||
+        e.key === "PageDown" ||
+        e.key === " " ||
+        e.key === "Enter"
+      ) {
         if (e.key === " " && e.target instanceof HTMLElement) {
           const tag = e.target.tagName
-          if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || e.target.isContentEditable) return
+          if (
+            tag === "INPUT" ||
+            tag === "TEXTAREA" ||
+            tag === "SELECT" ||
+            e.target.isContentEditable
+          )
+            return
         }
         e.preventDefault()
         applyDelta(peelPxRef.current * 0.12)
       } else if (e.key === "ArrowUp" || e.key === "PageUp") {
         e.preventDefault()
-        setOffset((prev) => Math.max(0, prev - peelPxRef.current * 0.12))
+        applyDelta(-(peelPxRef.current * 0.12))
       }
     }
 
@@ -106,10 +192,9 @@ export function LandingIntroCurtain() {
       window.removeEventListener("keydown", onKeyDown)
       window.removeEventListener("touchstart", onTouchStart)
       window.removeEventListener("touchmove", onTouchMove)
+      cancelAnimationFrame(rafRef.current)
     }
   }, [done, applyDelta])
-
-  const hintFade = Math.max(0, 1 - offset / (peelPx * 0.22))
 
   const brandMark = `${String(t("home.intro.headline", { defaultValue: "Amtar" })).toUpperCase()}.`
 
@@ -117,77 +202,37 @@ export function LandingIntroCurtain() {
 
   return (
     <div
+      ref={rootRef}
       className="intro-curtain-root fixed inset-0 z-[100] flex flex-col overflow-hidden bg-slate-900 text-slate-50"
-      style={{ transform: `translateY(${-offset}px)` }}
+      style={{ transform: "translate3d(0,0,0)", willChange: "transform" }}
       aria-hidden={false}
     >
-      <style>{`
-        .intro-curtain-root {
-          font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
-          -webkit-font-smoothing: antialiased;
-        }
-        .intro-curtain-grid {
-          background-size: 60px 60px;
-          background-image:
-            linear-gradient(to right, rgba(148, 163, 184, 0.07) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(148, 163, 184, 0.07) 1px, transparent 1px);
-          mask-image: linear-gradient(to bottom, transparent, black 14%, black 88%, transparent);
-          -webkit-mask-image: linear-gradient(to bottom, transparent, black 14%, black 88%, transparent);
-        }
-        .intro-curtain-giant {
-          font-size: min(24vw, 13rem);
-          line-height: 0.78;
-          font-weight: 900;
-          letter-spacing: -0.06em;
-          color: transparent;
-          -webkit-text-stroke: 1px rgba(148, 163, 184, 0.12);
-          background: linear-gradient(180deg, rgba(226, 232, 240, 0.12) 0%, transparent 62%);
-          -webkit-background-clip: text;
-          background-clip: text;
-          opacity: 0.65;
-        }
-        .intro-curtain-headline {
-          background: linear-gradient(180deg, #f8fafc 0%, rgba(96, 165, 250, 0.75) 55%, rgba(45, 212, 191, 0.55) 100%);
-          -webkit-background-clip: text;
-          background-clip: text;
-          color: transparent;
-          filter: drop-shadow(0 12px 40px rgba(11, 59, 255, 0.22));
-        }
-        .intro-curtain-glass-btn {
-          background: rgba(30, 41, 59, 0.72);
-          border: 1px solid rgba(255, 255, 255, 0.12);
-          box-shadow: 0 20px 50px rgba(11, 59, 255, 0.12);
-          backdrop-filter: blur(18px);
-          -webkit-backdrop-filter: blur(18px);
-        }
-      `}</style>
+      <style>{CURTAIN_CSS}</style>
 
-      {/* Hero-style ambient blobs (same language as Home hero) */}
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute -left-32 top-12 h-72 w-72 rounded-full bg-blue-500/25 blur-3xl" />
         <div className="absolute -right-24 top-40 h-72 w-72 rounded-full bg-teal-400/18 blur-3xl" />
         <div className="absolute bottom-0 left-1/2 h-[50vh] w-[90vw] -translate-x-1/2 rounded-[50%] bg-blue-600/15 blur-[100px]" />
       </div>
 
-      {/* Robot as readable backdrop — large, bottom-weighted, theme overlays on top */}
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute inset-0 bg-slate-900" />
         <div className="absolute inset-x-[-6%] bottom-0 top-[4%] flex items-end justify-center sm:inset-x-0">
-          <motion.img
+          <img
             src="/images/constructionRobot.png"
             alt={t("home.robotAlt")}
-            className="h-[min(88vh,880px)] w-auto max-w-[min(112vw,760px)] object-contain object-bottom drop-shadow-[0_24px_80px_rgba(0,0,0,0.45)] sm:max-w-[min(96vw,680px)] md:h-[min(90vh,920px)]"
+            className="curtain-robot-float h-[min(88vh,880px)] w-auto max-w-[min(112vw,760px)] object-contain object-bottom sm:max-w-[min(96vw,680px)] md:h-[min(90vh,920px)]"
             draggable={false}
-            initial={false}
-            animate={shouldRunHeavyAnimations ? { y: [0, -8, 0] } : {}}
-            transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut" }}
           />
         </div>
         <div
           className="absolute inset-0 bg-gradient-to-b from-slate-900 via-slate-900/55 to-slate-900/15"
           aria-hidden
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/25 to-slate-900/75" aria-hidden />
+        <div
+          className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/25 to-slate-900/75"
+          aria-hidden
+        />
         <div
           className="absolute inset-0 bg-[radial-gradient(ellipse_90%_70%_at_50%_18%,rgba(15,23,42,0.88),transparent_55%)]"
           aria-hidden
@@ -216,19 +261,19 @@ export function LandingIntroCurtain() {
           {t("home.intro.subhead")}
         </p>
 
-        <motion.div className="mt-10 flex flex-col items-center gap-2" style={{ opacity: hintFade }}>
+        <div ref={hintRef} className="mt-10 flex flex-col items-center gap-2">
           <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-400 md:text-xs">
             {t("home.intro.scrollHint")}
           </span>
-          <motion.button
+          <button
             type="button"
             onClick={nudgePeel}
             className="flex h-10 w-6 items-start justify-center rounded-full border border-white/12 bg-slate-800/40 pt-2 transition hover:border-blue-400/35 hover:bg-slate-800/55"
             aria-label={t("home.intro.scrollHint")}
           >
             <span className="block h-2 w-2 rounded-full bg-blue-300/90" />
-          </motion.button>
-        </motion.div>
+          </button>
+        </div>
       </div>
 
       <div className="relative z-20 flex w-full flex-col items-center gap-6 px-6 pb-10 md:flex-row md:items-center md:justify-between md:px-12">
@@ -242,8 +287,19 @@ export function LandingIntroCurtain() {
           className="intro-curtain-glass-btn flex h-12 w-12 items-center justify-center rounded-full text-teal-200/90 transition hover:border-white/20 hover:text-white"
           aria-label={t("home.intro.scrollHint")}
         >
-          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+          <svg
+            className="h-5 w-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M5 10l7-7m0 0l7 7m-7-7v18"
+            />
           </svg>
         </button>
       </div>

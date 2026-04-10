@@ -76,7 +76,7 @@ export function ParticleField({ enabled }: { enabled: boolean }) {
     let width = window.innerWidth
     let height = window.innerHeight
 
-    const count = window.innerWidth < 1024 ? 46 : 84
+    const count = window.innerWidth < 1024 ? 30 : 50
     const particles = Array.from({ length: count }).map(() => ({
       x: Math.random() * width,
       y: Math.random() * height,
@@ -107,17 +107,19 @@ export function ParticleField({ enabled }: { enabled: boolean }) {
         context.globalAlpha = 0.16
         context.fill()
 
+        const connDist = 100
+        const connDistSq = connDist * connDist
         for (let j = i + 1; j < particles.length; j += 1) {
           const other = particles[j]
           const dx = particle.x - other.x
           const dy = particle.y - other.y
-          const distance = Math.sqrt(dx * dx + dy * dy)
-          if (distance < 110) {
+          const distSq = dx * dx + dy * dy
+          if (distSq < connDistSq) {
             context.beginPath()
             context.moveTo(particle.x, particle.y)
             context.lineTo(other.x, other.y)
             context.strokeStyle = palette.blue
-            context.globalAlpha = 0.07 * (1 - distance / 110)
+            context.globalAlpha = 0.07 * (1 - Math.sqrt(distSq) / connDist)
             context.lineWidth = 1
             context.stroke()
           }
@@ -285,7 +287,7 @@ export function HeroScene({ enabled, className }: { enabled: boolean; className?
     camera.position.z = 4.2
 
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true })
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75))
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5))
     renderer.setSize(mount.clientWidth, mount.clientHeight)
     mount.appendChild(renderer.domElement)
 

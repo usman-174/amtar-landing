@@ -8,10 +8,10 @@ import { HERO_SHOWCASE_IMAGES } from "@/data/v2-assets"
 
 import { MagneticCard } from "./home-primitives"
 
-type Props = { shouldRunHeavyAnimations: boolean; topGradient: string }
+type Props = { shouldRunHeavyAnimations: boolean; topGradient: string; autoPlay?: boolean }
 
 export const HomeHeroSection = forwardRef<HTMLElement, Props>(function HomeHeroSection(
-  { shouldRunHeavyAnimations: _shouldRunHeavyAnimations, topGradient },
+  { shouldRunHeavyAnimations: _shouldRunHeavyAnimations, topGradient, autoPlay = true },
   ref
 ) {
   const { t } = useTranslation()
@@ -88,7 +88,7 @@ export const HomeHeroSection = forwardRef<HTMLElement, Props>(function HomeHeroS
         </div>
 
         <div className="relative min-h-[min(28rem,70vh)] w-full flex-1 overflow-hidden lg:h-full lg:flex-none lg:basis-[45%] lg:self-stretch">
-          <HeroImageShowcase images={HERO_SHOWCASE_IMAGES} className="absolute inset-0 size-full min-h-full" />
+          <HeroImageShowcase images={HERO_SHOWCASE_IMAGES} className="absolute inset-0 size-full min-h-full" autoPlay={autoPlay} />
         </div>
       </div>
     </section>

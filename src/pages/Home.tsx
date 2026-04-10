@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef } from "react"
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"
 import { motion, useScroll, useSpring, useTransform } from "framer-motion"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
@@ -33,6 +33,9 @@ export default function Home() {
   const { i18n } = useTranslation()
   const isRTL = i18n.language.startsWith("ar")
   const { shouldRunHeavyAnimations } = useMotionPolicy()
+
+  const [curtainDone, setCurtainDone] = useState(false)
+  const handleCurtainDismiss = useCallback(() => setCurtainDone(true), [])
 
   const rootRef = useRef<HTMLDivElement | null>(null)
   const heroRef = useRef<HTMLElement | null>(null)
@@ -209,6 +212,10 @@ export default function Home() {
     }
   }, [isRTL, shouldRunHeavyAnimations])
 
+  useEffect(() => {
+    if (curtainDone) ScrollTrigger.refresh()
+  }, [curtainDone])
+
   const toggleLanguage = () => i18n.changeLanguage(isRTL ? "en" : "ar")
 
   const topGradient =
@@ -248,19 +255,21 @@ export default function Home() {
         }
       `}</style>
 
-      <LandingIntroCurtain />
+      <LandingIntroCurtain onDismiss={handleCurtainDismiss} />
 
-      <motion.div
-        className="fixed left-0 right-0 top-0 z-[90] h-1 origin-left bg-gradient-to-r from-teal-500 via-blue-500 to-cyan-400"
-        style={{ scaleX: topBarScale }}
-      />
+      {curtainDone && (
+        <motion.div
+          className="fixed left-0 right-0 top-0 z-[90] h-1 origin-left bg-gradient-to-r from-teal-500 via-blue-500 to-cyan-400"
+          style={{ scaleX: topBarScale }}
+        />
+      )}
 
-      <ParticleField enabled={shouldRunHeavyAnimations} />
+      {curtainDone && <ParticleField enabled={shouldRunHeavyAnimations} />}
 
       <NavBar onToggleLanguage={toggleLanguage} />
 
       <main className="relative z-10">
-        <HomeHeroSection ref={heroRef} shouldRunHeavyAnimations={shouldRunHeavyAnimations} topGradient={topGradient} />
+        <HomeHeroSection ref={heroRef} shouldRunHeavyAnimations={shouldRunHeavyAnimations} topGradient={topGradient} autoPlay={curtainDone} />
 
         <V2ScrollProjectGallery isRTL={isRTL} />
 

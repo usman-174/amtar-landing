@@ -9,9 +9,14 @@ const AUTO_MS = 5200
 type Props = {
   images?: readonly HeroShowcaseImage[]
   className?: string
+  autoPlay?: boolean
 }
 
-export function HeroImageShowcase({ images = HERO_SHOWCASE_IMAGES, className = "" }: Props) {
+export function HeroImageShowcase({
+  images = HERO_SHOWCASE_IMAGES,
+  className = "",
+  autoPlay = true,
+}: Props) {
   const [index, setIndex] = useState(0)
   const [dir, setDir] = useState(0)
   const count = images.length
@@ -21,15 +26,32 @@ export function HeroImageShowcase({ images = HERO_SHOWCASE_IMAGES, className = "
       setDir(delta)
       setIndex((i) => (i + delta + count) % count)
     },
-    [count]
+    [count],
   )
 
   useEffect(() => {
+    if (!autoPlay) return
     const t = window.setInterval(() => go(1), AUTO_MS)
     return () => window.clearInterval(t)
-  }, [go])
+  }, [go, autoPlay])
 
   const current = images[index]
+
+  if (!autoPlay) {
+    return (
+      <div className={cn("relative isolate min-h-full w-full", className)}>
+        <div className="absolute inset-0">
+          <img
+            src={images[0].src}
+            alt={images[0].alt}
+            className="h-full w-full object-cover"
+            draggable={false}
+          />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-900/75 via-slate-900/10 to-transparent" />
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className={cn("relative isolate min-h-full w-full", className)}>
