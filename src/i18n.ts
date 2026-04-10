@@ -194,8 +194,49 @@ const resources = {
       footer: {
         line: "Amtar... From the first meter to project success",
       },
+      footerPremium: {
+        tagline: "The operating layer for construction commerce—catalogs, quotes, branches, and compliant billing in one place.",
+        robotAlt: "Amtar assistant — construction robot mascot",
+        robotCaption: "Your on-site guide to faster quotes and cleaner operations.",
+        colProduct: "Product",
+        colCompany: "Company",
+        colLegal: "Legal",
+        linkWorkflow: "Solutions & workflow",
+        linkInsights: "Performance & insights",
+        linkIndustries: "Industries",
+        linkPricing: "Pricing",
+        office: "Saudi Arabia",
+        privacy: "Privacy",
+        terms: "Terms",
+        rights: "© 2026 Amtar. All rights reserved.",
+        madeIn: "Built for construction teams in Saudi Arabia and the Gulf.",
+      },
+      footerCinematic: {
+        ready: "Ready to begin?",
+        ios: "Download iOS",
+        android: "Download Android",
+        support: "Support",
+        crafted: "Crafted with",
+        by: "by",
+        brand: "Amtar",
+      },
       langSwitch: "?",
       home: {
+        intro: {
+          kicker: "Construction commerce",
+          headline: "Amtar",
+          subhead:
+            "Your command center for catalogs, smart quotes, branch sync, and compliant billing—scroll to enter the full experience.",
+          scrollHint: "Scroll to explore",
+        },
+        cinematicMarquee: [
+          "Catalog to invoice in one flow",
+          "Transparent branch operations",
+          "Quotes with clear accountability",
+          "ZATCA-ready workflows",
+          "Built for Saudi construction teams",
+        ],
+        robotAlt: "Construction robot assistant welcoming you to Amtar",
         liveTracking: "Live tracking",
         popular: "Popular",
         testimonialsKicker: "Testimonials",
@@ -236,6 +277,41 @@ const resources = {
         step3Body:
           "Move from approved quote to delivery and compliant invoicing.",
         step3Kpi: "Invoice cycle reduced to 4 days",
+      },
+      v2Gallery: {
+        kicker: "Featured visuals",
+        title: "Projects in motion",
+        subtitle:
+          "Scroll—each frame enters from its own angle, scales into focus, then settles. Tap any image to open a sample project sheet.",
+        openHint: "Click to open",
+        caseLabel: "Case {{n}}",
+        items: {
+          item0: {
+            title: "National materials command",
+            body: "Branch-aware catalog, live stock signals, and quote velocity in one operating layer.",
+          },
+          item1: {
+            title: "Field-to-finance pipeline",
+            body: "Approvals, delivery checkpoints, and invoicing stitched into a single timeline.",
+          },
+          item2: {
+            title: "Multi-site procurement mesh",
+            body: "Coordinated sourcing across regions with shared governance and audit-ready trails.",
+          },
+          item3: {
+            title: "Executive performance lens",
+            body: "Leadership dashboards that compress noise into decisive weekly momentum signals.",
+          },
+          item4: {
+            title: "Partner ecosystem storefront",
+            body: "A premium digital front that scales from pilot branch to nationwide rollout.",
+          },
+        },
+        dialog: {
+          close: "Close",
+          hint: "Demo link—replace with your real case study URL.",
+          cta: "Open dummy project",
+        },
       },
       contact: {
         badge: "Contact",
@@ -455,8 +531,49 @@ const resources = {
       footer: {
         line: "أمتار... من أول متر حتى اكتمال مشروعك",
       },
+      footerPremium: {
+        tagline: "طبقة التشغيل لتجارة البناء—كتالوجات وعروض وفروع وفوترة متوافقة في مكان واحد.",
+        robotAlt: "مساعد أمتار — روبوت بثيمة البناء",
+        robotCaption: "دليلك الميداني لعروض أسرع وتشغيل أوضح.",
+        colProduct: "المنتج",
+        colCompany: "الشركة",
+        colLegal: "قانوني",
+        linkWorkflow: "الحلول وسير العمل",
+        linkInsights: "الأداء والمؤشرات",
+        linkIndustries: "القطاعات",
+        linkPricing: "الأسعار",
+        office: "المملكة العربية السعودية",
+        privacy: "الخصوصية",
+        terms: "الشروط",
+        rights: "© 2026 أمتار. جميع الحقوق محفوظة.",
+        madeIn: "مبني لفرق البناء في السعودية والخليج.",
+      },
+      footerCinematic: {
+        ready: "هل أنت مستعد للبدء؟",
+        ios: "تنزيل iOS",
+        android: "تنزيل أندرويد",
+        support: "الدعم",
+        crafted: "صُنع بـ",
+        by: "من",
+        brand: "أمتار",
+      },
       langSwitch: "EN",
       home: {
+        intro: {
+          kicker: "تجارة البناء",
+          headline: "أمتار",
+          subhead:
+            "مركز قيادتك للكتالوجات والعروض الذكية ومزامنة الفروع والفوترة المتوافقة—مرّر لدخول التجربة الكاملة.",
+          scrollHint: "مرّر للاستكشاف",
+        },
+        cinematicMarquee: [
+          "من الكتالوج إلى الفاتورة في مسار واحد",
+          "تشغيل شفاف للفروع",
+          "عروض بمساءلة واضحة",
+          "جاهزية متوافقة مع الزكاة والضريبة",
+          "مبني لفرق البناء في السعودية",
+        ],
+        robotAlt: "روبوت مساعد بثيمة البناء يرحب بك في أمتار",
         liveTracking: "متابعة لحظية",
         popular: "الأكثر طلبًا",
         testimonialsKicker: "آراء العملاء",
@@ -491,6 +608,41 @@ const resources = {
         step3Title: "التسليم والفوترة",
         step3Body: "الانتقال من عرض معتمد إلى تسليم وفوترة متوافقة.",
         step3Kpi: "خفض دورة الفاتورة إلى 4 أيام",
+      },
+      v2Gallery: {
+        kicker: "لقطات مميزة",
+        title: "مشاريع في حركة",
+        subtitle:
+          "مرّر الصفحة—كل إطار يدخل من زاوية مختلفة ويتكبّر ثم يستقر. اضغط على أي صورة لفتح بطاقة مشروع تجريبية.",
+        openHint: "اضغط للفتح",
+        caseLabel: "دراسة {{n}}",
+        items: {
+          item0: {
+            title: "قيادة مواد على مستوى الوطن",
+            body: "كتالوج يعرف الفروع، ومؤشرات مخزون لحظية، وسرعة عروض في طبقة تشغيل واحدة.",
+          },
+          item1: {
+            title: "مسار من الميدان إلى المالية",
+            body: "اعتمادات، نقاط تسليم، وفوترة مدمجة في خط زمني واحد.",
+          },
+          item2: {
+            title: "شبكة توريد متعددة المواقع",
+            body: "تنسيق التوريد بين المناطق مع حوكمة موحدة ومسارات جاهزة للمراجعة.",
+          },
+          item3: {
+            title: "عدسة أداء تنفيذية",
+            body: "لوحات قيادة تختصر الضجيج إلى إشارات أسبوعية حاسمة.",
+          },
+          item4: {
+            title: "واجهة شراكات راقية",
+            body: "واجهة رقمية تتوسع من فرع تجريبي إلى إطلاق وطني.",
+          },
+        },
+        dialog: {
+          close: "إغلاق",
+          hint: "رابط تجريبي—استبدله برابط دراسة الحالة الحقيقية.",
+          cta: "فتح مشروع تجريبي",
+        },
       },
       contact: {
         badge: "تواصل",
