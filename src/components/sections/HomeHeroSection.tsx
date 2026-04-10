@@ -59,36 +59,15 @@ export const HomeHeroSection = forwardRef<HTMLElement, Props>(function HomeHeroS
             </Button>
           </div>
 
-          <div className="mt-10 flex flex-col items-stretch gap-8 sm:flex-row sm:items-end">
-            <div className="grid max-w-xl flex-1 grid-cols-2 gap-4">
-              <MagneticCard className="p-5">
-                <p className="text-2xl font-bold text-blue-200">150K+</p>
-                <p className="mt-2 text-sm text-slate-200/70">{t("hero.statsProjects")}</p>
-              </MagneticCard>
-              <MagneticCard className="p-5">
-                <p className="text-2xl font-bold text-teal-200">620+</p>
-                <p className="mt-2 text-sm text-slate-200/70">{t("hero.statsBranches")}</p>
-              </MagneticCard>
-            </div>
-
-            <motion.div
-              className="flex shrink-0 justify-center sm:justify-end sm:pb-1"
-              initial={{ opacity: 0, y: 16, scale: 0.96 }}
-              whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <div className="relative">
-                <div className="pointer-events-none absolute -inset-2 rounded-3xl bg-gradient-to-br from-blue-500/25 to-teal-500/15 blur-2xl" />
-                <motion.img
-                  src="/images/constructionRobot.png"
-                  alt={t("home.robotAlt")}
-                  className="relative z-10 h-28 w-auto object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.35)] sm:h-32 md:h-40"
-                  animate={shouldRunHeavyAnimations ? { y: [0, -7, 0], rotate: [0, 1.2, 0] } : {}}
-                  transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut" }}
-                />
-              </div>
-            </motion.div>
+          <div className="mt-10 grid max-w-xl grid-cols-2 gap-4">
+            <MagneticCard className="p-5">
+              <p className="text-2xl font-bold text-blue-200">150K+</p>
+              <p className="mt-2 text-sm text-slate-200/70">{t("hero.statsProjects")}</p>
+            </MagneticCard>
+            <MagneticCard className="p-5">
+              <p className="text-2xl font-bold text-teal-200">620+</p>
+              <p className="mt-2 text-sm text-slate-200/70">{t("hero.statsBranches")}</p>
+            </MagneticCard>
           </div>
         </div>
 

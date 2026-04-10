@@ -1,11 +1,12 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react"
-import { AnimatePresence, motion } from "framer-motion"
+import { useLayoutEffect, useRef, useState } from "react"
+import { Drawer } from "@base-ui/react/drawer"
 import { ExternalLink, X } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 
 import { V2_GALLERY_IMAGES } from "@/data/v2-assets"
+import { cn } from "@/lib/utils"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -22,21 +23,13 @@ type OpenState = {
 export function V2ScrollProjectGallery({ isRTL }: V2ScrollProjectGalleryProps) {
   const { t } = useTranslation()
   const rootRef = useRef<HTMLElement | null>(null)
-  const [open, setOpen] = useState<OpenState | null>(null)
+  const [drawerOpen, setDrawerOpen] = useState(false)
+  const [activeItem, setActiveItem] = useState<OpenState | null>(null)
 
-  useEffect(() => {
-    if (!open) return
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(null)
-    }
-    window.addEventListener("keydown", onKey)
-    const prev = document.body.style.overflow
-    document.body.style.overflow = "hidden"
-    return () => {
-      window.removeEventListener("keydown", onKey)
-      document.body.style.overflow = prev
-    }
-  }, [open])
+  const openProject = (state: OpenState) => {
+    setActiveItem(state)
+    setDrawerOpen(true)
+  }
 
   useLayoutEffect(() => {
     const root = rootRef.current
@@ -91,6 +84,30 @@ export function V2ScrollProjectGallery({ isRTL }: V2ScrollProjectGalleryProps) {
 
   return (
     <>
+      <style>{`
+        .v2-drawer-backdrop {
+          opacity: calc(0.82 * (1 - var(--drawer-swipe-progress, 0)));
+          transition: opacity 240ms ease-out;
+        }
+        .v2-drawer-backdrop[data-ending-style] {
+          opacity: 0;
+        }
+        .v2-drawer-backdrop[data-swiping],
+        .v2-drawer-popup[data-swiping] {
+          transition-duration: 0ms;
+        }
+        .v2-drawer-popup[data-swipe-direction='down'] {
+          transform: translateY(calc(var(--drawer-snap-point-offset, 0px) + var(--drawer-swipe-movement-y, 0px)));
+        }
+        .v2-drawer-popup[data-ending-style][data-swipe-direction='down'] {
+          transform: translateY(100%);
+        }
+        .v2-drawer-popup[data-ending-style],
+        .v2-drawer-backdrop[data-ending-style] {
+          transition-duration: calc(var(--drawer-swipe-strength, 1) * 380ms);
+        }
+      `}</style>
+
       <section
         ref={rootRef}
         data-v2-section
@@ -125,7 +142,7 @@ export function V2ScrollProjectGallery({ isRTL }: V2ScrollProjectGalleryProps) {
                 >
                   <button
                     type="button"
-                    onClick={() => setOpen({ index, src: img.src, alt: img.alt })}
+                    onClick={() => openProject({ index, src: img.src, alt: img.alt })}
                     className="group relative w-full max-w-2xl shrink-0 overflow-hidden rounded-[1.75rem] border border-white/12 bg-slate-800/55 text-start shadow-[0_28px_90px_rgba(11,59,255,0.1)] outline-none transition hover:border-blue-400/35 focus-visible:ring-2 focus-visible:ring-blue-400/50 md:w-[58%]"
                   >
                     <div data-v2-card-inner className="relative aspect-[16/11] w-full overflow-hidden md:aspect-[5/3]">
@@ -156,60 +173,64 @@ export function V2ScrollProjectGallery({ isRTL }: V2ScrollProjectGalleryProps) {
         </div>
       </section>
 
-      <AnimatePresence>
-        {open ? (
-          <motion.div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="v2-dialog-title"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
-            className="fixed inset-0 z-[200] flex items-center justify-center bg-slate-900/88 p-4 backdrop-blur-md"
-            onClick={() => setOpen(null)}
-          >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.94, y: 16 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.96, y: 10 }}
-              transition={{ type: "spring", stiffness: 380, damping: 32 }}
-              onClick={(e) => e.stopPropagation()}
-              className="relative max-h-[90vh] w-full max-w-lg overflow-hidden rounded-2xl border border-white/10 bg-slate-900 shadow-2xl shadow-blue-500/10"
+      <Drawer.Root
+        open={drawerOpen}
+        onOpenChange={setDrawerOpen}
+        onOpenChangeComplete={(open) => {
+          if (!open) setActiveItem(null)
+        }}
+        swipeDirection="down"
+      >
+        <Drawer.Portal>
+          <Drawer.Backdrop className="v2-drawer-backdrop fixed inset-0 z-[200] bg-slate-950/80 backdrop-blur-md" />
+          <Drawer.Viewport className="fixed inset-x-0 bottom-0 z-[201] flex max-h-[min(92dvh,920px)] justify-center overscroll-contain px-0 pt-6">
+            <Drawer.Popup
+              className={cn(
+                "v2-drawer-popup w-full max-w-lg rounded-t-2xl border border-white/10 bg-slate-900 shadow-2xl shadow-blue-500/15 outline-none transition-transform duration-300 ease-out"
+              )}
             >
-              <button
-                type="button"
-                aria-label={t("v2Gallery.dialog.close")}
-                onClick={() => setOpen(null)}
-                className="absolute end-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full border border-white/12 bg-slate-800/90 text-slate-200 transition hover:bg-slate-700"
-              >
-                <X className="h-4 w-4" />
-              </button>
+              <Drawer.Content className="max-h-[min(85dvh,820px)] overflow-y-auto rounded-t-2xl">
+                {activeItem ? (
+                  <>
+                    <div className="sticky top-0 z-10 flex justify-end border-b border-white/5 bg-slate-900/95 px-3 py-2 backdrop-blur-md">
+                      <Drawer.Close
+                        type="button"
+                        aria-label={t("v2Gallery.dialog.close")}
+                        className="flex h-9 w-9 items-center justify-center rounded-full border border-white/12 bg-slate-800/90 text-slate-200 transition hover:bg-slate-700"
+                      >
+                        <X className="h-4 w-4" />
+                      </Drawer.Close>
+                    </div>
 
-              <div className="aspect-video w-full overflow-hidden">
-                <img src={open.src} alt={open.alt} className="h-full w-full object-cover" />
-              </div>
+                    <div className="aspect-video w-full overflow-hidden">
+                      <img src={activeItem.src} alt={activeItem.alt} className="h-full w-full object-cover" />
+                    </div>
 
-              <div className="space-y-3 p-6">
-                <h3 id="v2-dialog-title" className="text-xl font-semibold text-slate-50">
-                  {t(`v2Gallery.items.item${open.index}.title`)}
-                </h3>
-                <p className="text-sm leading-relaxed text-slate-200/75">{t(`v2Gallery.items.item${open.index}.body`)}</p>
-                <p className="text-xs text-slate-400">{t("v2Gallery.dialog.hint")}</p>
-                <a
-                  href="https://example.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full bg-blue-500 px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-blue-500/25 transition hover:bg-blue-400"
-                >
-                  {t("v2Gallery.dialog.cta")}
-                  <ExternalLink className="h-4 w-4" />
-                </a>
-              </div>
-            </motion.div>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
+                    <div className="space-y-3 p-6 pb-8">
+                      <Drawer.Title className="text-xl font-semibold text-slate-50" id="v2-drawer-title">
+                        {t(`v2Gallery.items.item${activeItem.index}.title`)}
+                      </Drawer.Title>
+                      <Drawer.Description className="text-sm leading-relaxed text-slate-200/75">
+                        {t(`v2Gallery.items.item${activeItem.index}.body`)}
+                      </Drawer.Description>
+                      <p className="text-xs text-slate-400">{t("v2Gallery.dialog.hint")}</p>
+                      <a
+                        href="https://example.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 rounded-full bg-blue-500 px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-blue-500/25 transition hover:bg-blue-400"
+                      >
+                        {t("v2Gallery.dialog.cta")}
+                        <ExternalLink className="h-4 w-4" />
+                      </a>
+                    </div>
+                  </>
+                ) : null}
+              </Drawer.Content>
+            </Drawer.Popup>
+          </Drawer.Viewport>
+        </Drawer.Portal>
+      </Drawer.Root>
     </>
   )
 }

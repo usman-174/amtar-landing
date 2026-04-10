@@ -2,12 +2,15 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react
 import { motion } from "framer-motion"
 import { useTranslation } from "react-i18next"
 
+import { useMotionPolicy } from "@/hooks/useMotionPolicy"
+
 /**
- * Full-viewport intro above the nav. Peel amount is driven by wheel / touch / keys only —
- * document scroll stays at 0 until the curtain is gone, so the hero (not the next section) is revealed first.
+ * Full-screen intro curtain — wheel/touch peels it away; scroll stays at 0 until dismissed.
+ * Matches site theme (slate-900, blue/teal glows, glass borders) with the robot as the hero backdrop.
  */
 export function LandingIntroCurtain() {
   const { t } = useTranslation()
+  const { shouldRunHeavyAnimations } = useMotionPolicy()
   const [peelPx, setPeelPx] = useState(() =>
     typeof window !== "undefined" ? Math.min(window.innerHeight, 900) : 800
   )
@@ -18,10 +21,7 @@ export function LandingIntroCurtain() {
   const [done, setDone] = useState(false)
 
   useEffect(() => {
-    const onResize = () => {
-      const next = Math.min(window.innerHeight, 900)
-      setPeelPx(next)
-    }
+    const onResize = () => setPeelPx(Math.min(window.innerHeight, 900))
     onResize()
     window.addEventListener("resize", onResize)
     return () => window.removeEventListener("resize", onResize)
@@ -57,6 +57,10 @@ export function LandingIntroCurtain() {
       return next
     })
   }, [done])
+
+  const nudgePeel = useCallback(() => {
+    applyDelta(peelPxRef.current * 0.22)
+  }, [applyDelta])
 
   useEffect(() => {
     if (done) return
@@ -107,41 +111,141 @@ export function LandingIntroCurtain() {
 
   const hintFade = Math.max(0, 1 - offset / (peelPx * 0.22))
 
+  const brandMark = `${String(t("home.intro.headline", { defaultValue: "Amtar" })).toUpperCase()}.`
+
   if (done) return null
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden"
+      className="intro-curtain-root fixed inset-0 z-[100] flex flex-col overflow-hidden bg-slate-900 text-slate-50"
       style={{ transform: `translateY(${-offset}px)` }}
       aria-hidden={false}
     >
-      <div className="absolute inset-0">
-        <img
-          src="/images/constructionRobot.png"
-          alt=""
-          className="h-full w-full object-cover object-[center_30%] sm:object-[center_20%]"
-          draggable={false}
-        />
-        <div className="absolute inset-0 bg-slate-950" />
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/95 via-slate-950/92 to-slate-950" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_22%,rgba(59,130,246,0.14),transparent_50%)]" />
+      <style>{`
+        .intro-curtain-root {
+          font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+          -webkit-font-smoothing: antialiased;
+        }
+        .intro-curtain-grid {
+          background-size: 60px 60px;
+          background-image:
+            linear-gradient(to right, rgba(148, 163, 184, 0.07) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(148, 163, 184, 0.07) 1px, transparent 1px);
+          mask-image: linear-gradient(to bottom, transparent, black 14%, black 88%, transparent);
+          -webkit-mask-image: linear-gradient(to bottom, transparent, black 14%, black 88%, transparent);
+        }
+        .intro-curtain-giant {
+          font-size: min(24vw, 13rem);
+          line-height: 0.78;
+          font-weight: 900;
+          letter-spacing: -0.06em;
+          color: transparent;
+          -webkit-text-stroke: 1px rgba(148, 163, 184, 0.12);
+          background: linear-gradient(180deg, rgba(226, 232, 240, 0.12) 0%, transparent 62%);
+          -webkit-background-clip: text;
+          background-clip: text;
+          opacity: 0.65;
+        }
+        .intro-curtain-headline {
+          background: linear-gradient(180deg, #f8fafc 0%, rgba(96, 165, 250, 0.75) 55%, rgba(45, 212, 191, 0.55) 100%);
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+          filter: drop-shadow(0 12px 40px rgba(11, 59, 255, 0.22));
+        }
+        .intro-curtain-glass-btn {
+          background: rgba(30, 41, 59, 0.72);
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          box-shadow: 0 20px 50px rgba(11, 59, 255, 0.12);
+          backdrop-filter: blur(18px);
+          -webkit-backdrop-filter: blur(18px);
+        }
+      `}</style>
+
+      {/* Hero-style ambient blobs (same language as Home hero) */}
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -left-32 top-12 h-72 w-72 rounded-full bg-blue-500/25 blur-3xl" />
+        <div className="absolute -right-24 top-40 h-72 w-72 rounded-full bg-teal-400/18 blur-3xl" />
+        <div className="absolute bottom-0 left-1/2 h-[50vh] w-[90vw] -translate-x-1/2 rounded-[50%] bg-blue-600/15 blur-[100px]" />
       </div>
 
-      <div className="relative z-10 flex max-w-3xl flex-col items-center px-6 text-center">
-        <p className="mb-4 text-xs font-semibold uppercase tracking-[0.35em] text-blue-200/90">{t("home.intro.kicker")}</p>
-        <h1 className="text-balance text-4xl font-semibold tracking-tight text-white md:text-6xl">{t("home.intro.headline")}</h1>
-        <p className="mt-5 max-w-xl text-pretty text-sm leading-relaxed text-slate-200/75 md:text-lg">{t("home.intro.subhead")}</p>
+      {/* Robot as readable backdrop — large, bottom-weighted, theme overlays on top */}
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute inset-0 bg-slate-900" />
+        <div className="absolute inset-x-[-6%] bottom-0 top-[4%] flex items-end justify-center sm:inset-x-0">
+          <motion.img
+            src="/images/constructionRobot.png"
+            alt={t("home.robotAlt")}
+            className="h-[min(88vh,880px)] w-auto max-w-[min(112vw,760px)] object-contain object-bottom drop-shadow-[0_24px_80px_rgba(0,0,0,0.45)] sm:max-w-[min(96vw,680px)] md:h-[min(90vh,920px)]"
+            draggable={false}
+            initial={false}
+            animate={shouldRunHeavyAnimations ? { y: [0, -8, 0] } : {}}
+            transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </div>
+        <div
+          className="absolute inset-0 bg-gradient-to-b from-slate-900 via-slate-900/55 to-slate-900/15"
+          aria-hidden
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/25 to-slate-900/75" aria-hidden />
+        <div
+          className="absolute inset-0 bg-[radial-gradient(ellipse_90%_70%_at_50%_18%,rgba(15,23,42,0.88),transparent_55%)]"
+          aria-hidden
+        />
+        <div
+          className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_92%,rgba(11,59,255,0.14),transparent_55%)]"
+          aria-hidden
+        />
+        <div className="intro-curtain-grid absolute inset-0 opacity-80" aria-hidden />
+        <div
+          className="intro-curtain-giant absolute -bottom-[4vh] left-1/2 w-[max-content] -translate-x-1/2 select-none whitespace-nowrap"
+          aria-hidden
+        >
+          {brandMark}
+        </div>
+      </div>
 
-        <motion.div className="mt-14 flex flex-col items-center gap-2" style={{ opacity: hintFade }}>
-          <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-400 md:text-xs">{t("home.intro.scrollHint")}</span>
-          <motion.div
-            className="flex h-10 w-6 justify-center rounded-full border border-white/20 bg-white/5"
-            animate={{ y: [0, 6, 0] }}
-            transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+      <div className="relative z-10 flex min-h-0 flex-1 flex-col items-center justify-center px-6 pb-8 pt-20">
+        <p className="mb-4 inline-flex items-center rounded-full border border-white/10 bg-slate-800/50 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.22em] text-blue-200">
+          {t("home.intro.kicker")}
+        </p>
+        <h1 className="intro-curtain-headline text-center text-5xl font-black tracking-tighter md:text-7xl lg:text-8xl">
+          {t("footerCinematic.ready")}
+        </h1>
+        <p className="mt-6 max-w-lg text-center text-sm leading-relaxed text-slate-200/75 md:text-base">
+          {t("home.intro.subhead")}
+        </p>
+
+        <motion.div className="mt-10 flex flex-col items-center gap-2" style={{ opacity: hintFade }}>
+          <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-400 md:text-xs">
+            {t("home.intro.scrollHint")}
+          </span>
+          <motion.button
+            type="button"
+            onClick={nudgePeel}
+            className="flex h-10 w-6 items-start justify-center rounded-full border border-white/12 bg-slate-800/40 pt-2 transition hover:border-blue-400/35 hover:bg-slate-800/55"
+            aria-label={t("home.intro.scrollHint")}
           >
-            <span className="mt-2 block h-2 w-2 rounded-full bg-blue-300/90" />
-          </motion.div>
+            <span className="block h-2 w-2 rounded-full bg-blue-300/90" />
+          </motion.button>
         </motion.div>
+      </div>
+
+      <div className="relative z-20 flex w-full flex-col items-center gap-6 px-6 pb-10 md:flex-row md:items-center md:justify-between md:px-12">
+        <p className="text-center text-[10px] font-semibold uppercase tracking-[0.28em] text-slate-400 md:text-start md:text-xs">
+          {t("footerPremium.rights")}
+        </p>
+
+        <button
+          type="button"
+          onClick={nudgePeel}
+          className="intro-curtain-glass-btn flex h-12 w-12 items-center justify-center rounded-full text-teal-200/90 transition hover:border-white/20 hover:text-white"
+          aria-label={t("home.intro.scrollHint")}
+        >
+          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+          </svg>
+        </button>
       </div>
     </div>
   )

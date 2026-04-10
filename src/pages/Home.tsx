@@ -25,7 +25,6 @@ import {
 } from "@/components/sections"
 import { ParticleField } from "@/components/sections/home-primitives"
 import { palette } from "@/components/sections/home-data"
-import { CinematicFooter } from "@/components/ui/motion-footer"
 import { useMotionPolicy } from "@/hooks/useMotionPolicy"
 
 gsap.registerPlugin(ScrollTrigger)
@@ -114,12 +113,6 @@ export default function Home() {
         ".insight-metric",
         { scale: 0.9, opacity: 0, y: 26 },
         { scale: 1, opacity: 1, y: 0, duration: 0.86, stagger: 0.12, scrollTrigger: { trigger: insightsRef.current, start: "top 74%" } }
-      )
-
-      gsap.fromTo(
-        ".insight-bar",
-        { scaleY: 0, transformOrigin: "bottom center" },
-        { scaleY: 1, duration: 1, stagger: 0.1, ease: "power4.out", scrollTrigger: { trigger: insightsRef.current, start: "top 72%" } }
       )
 
       gsap.fromTo(
@@ -285,7 +278,6 @@ export default function Home() {
         <HomeCtaSection ref={ctaRef} />
       </main>
 
-      <CinematicFooter />
       <SiteFooter />
     </div>
   )
