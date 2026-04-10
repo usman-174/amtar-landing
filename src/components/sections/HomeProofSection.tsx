@@ -10,7 +10,7 @@ export const HomeProofSection = forwardRef<HTMLElement>(function HomeProofSectio
   return (
     <section ref={ref} className="px-4 py-24 md:px-8">
       <div className="mx-auto max-w-7xl">
-        <SectionHeading kicker={t("proof.kicker")} title={t("proof.title")} subtitle={t("proof.subtitle")} centered />
+        <SectionHeading title={t("proof.title")} subtitle={t("proof.subtitle")} centered />
         <div className="mt-12 grid gap-3 md:grid-cols-3 lg:grid-cols-6">
           {badges.map((badge) => (
             <div

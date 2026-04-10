@@ -251,9 +251,6 @@ export function LandingIntroCurtain({ onDismiss }: { onDismiss?: () => void }) {
       </div>
 
       <div className="relative z-10 flex min-h-0 flex-1 flex-col items-center justify-center px-6 pb-8 pt-20">
-        <p className="mb-4 inline-flex items-center rounded-full border border-white/10 bg-slate-800/50 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.22em] text-blue-200">
-          {t("home.intro.kicker")}
-        </p>
         <h1 className="intro-curtain-headline text-center text-5xl font-black tracking-tighter md:text-7xl lg:text-8xl">
           {t("footerCinematic.ready")}
         </h1>
