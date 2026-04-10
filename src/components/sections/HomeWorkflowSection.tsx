@@ -18,11 +18,11 @@ export const HomeWorkflowSection = forwardRef<HTMLElement>(function HomeWorkflow
           {workflowCards.map((card, index) => (
             <MagneticCard key={card.title} className="workflow-card p-6">
               <div className="flex items-center justify-between">
-                <span className="rounded-xl bg-blue-500/15 px-3 py-1 text-xs font-semibold text-blue-200">0{index + 1}</span>
-                <Workflow className="h-5 w-5 text-blue-300" />
+                <span className="rounded-xl bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">0{index + 1}</span>
+                <Workflow className="h-5 w-5 text-primary/80" />
               </div>
-              <h3 className="mt-4 text-xl font-semibold text-slate-50">{card.title}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-slate-200/70">{card.body}</p>
+              <h3 className="mt-4 text-xl font-semibold text-foreground">{card.title}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{card.body}</p>
             </MagneticCard>
           ))}
         </div>

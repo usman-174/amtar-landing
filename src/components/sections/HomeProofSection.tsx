@@ -15,7 +15,7 @@ export const HomeProofSection = forwardRef<HTMLElement>(function HomeProofSectio
           {badges.map((badge) => (
             <div
               key={badge}
-              className="proof-badge rounded-2xl border border-white/10 bg-blue-500/10 px-4 py-3 text-center text-xs font-semibold text-blue-200"
+              className="proof-badge rounded-2xl border border-border/70 bg-primary/10 px-4 py-3 text-center text-xs font-semibold text-primary/85"
             >
               {badge}
             </div>

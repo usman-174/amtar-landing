@@ -16,7 +16,7 @@ export const HomeIndustriesSection = forwardRef<HTMLElement>(function HomeIndust
           {industries.map((industry) => (
             <span
               key={industry}
-              className="industry-chip rounded-full border border-white/10 bg-slate-800/42 px-5 py-2 text-sm font-medium text-slate-100 shadow-sm"
+              className="industry-chip rounded-full border border-border/70 bg-card/70 px-5 py-2 text-sm font-medium text-foreground shadow-sm"
             >
               {industry}
             </span>

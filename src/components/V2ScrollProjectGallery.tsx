@@ -114,15 +114,15 @@ export function V2ScrollProjectGallery({ isRTL }: V2ScrollProjectGalleryProps) {
         className="relative overflow-hidden px-4 py-24 md:px-8"
         aria-labelledby="v2-gallery-heading"
       >
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,rgba(11,59,255,0.22),transparent),radial-gradient(ellipse_60%_40%_at_100%_60%,rgba(13,148,136,0.12),transparent)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,rgba(11,59,255,0.14),transparent),radial-gradient(ellipse_60%_40%_at_100%_60%,rgba(11,59,255,0.08),transparent)] dark:bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,rgba(11,59,255,0.22),transparent),radial-gradient(ellipse_60%_40%_at_100%_60%,rgba(13,148,136,0.12),transparent)]" />
 
         <div className="relative z-10 mx-auto max-w-7xl">
           <div className="mx-auto max-w-3xl text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-blue-200/90">{t("v2Gallery.kicker")}</p>
-            <h2 id="v2-gallery-heading" className="mt-3 text-balance text-3xl font-semibold text-slate-50 md:text-5xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary/80">{t("v2Gallery.kicker")}</p>
+            <h2 id="v2-gallery-heading" className="mt-3 text-balance text-3xl font-semibold text-foreground md:text-5xl">
               {t("v2Gallery.title")}
             </h2>
-            <p className="mt-4 text-pretty text-sm leading-relaxed text-slate-200/70 md:text-base">{t("v2Gallery.subtitle")}</p>
+            <p className="mt-4 text-pretty text-sm leading-relaxed text-muted-foreground md:text-base">{t("v2Gallery.subtitle")}</p>
           </div>
 
           <div className="mt-16 flex flex-col gap-16 md:gap-24">
@@ -143,7 +143,7 @@ export function V2ScrollProjectGallery({ isRTL }: V2ScrollProjectGalleryProps) {
                   <button
                     type="button"
                     onClick={() => openProject({ index, src: img.src, alt: img.alt })}
-                    className="group relative w-full max-w-2xl shrink-0 overflow-hidden rounded-[1.75rem] border border-white/12 bg-slate-800/55 text-start shadow-[0_28px_90px_rgba(11,59,255,0.1)] outline-none transition hover:border-blue-400/35 focus-visible:ring-2 focus-visible:ring-blue-400/50 md:w-[58%]"
+                    className="group relative w-full max-w-2xl shrink-0 overflow-hidden rounded-[1.75rem] border border-border/70 bg-card/60 text-start shadow-[0_28px_90px_rgba(11,59,255,0.08)] outline-none transition hover:border-primary/35 focus-visible:ring-2 focus-visible:ring-ring/50 md:w-[58%]"
                   >
                     <div data-v2-card-inner className="relative aspect-[16/11] w-full overflow-hidden md:aspect-[5/3]">
                       <img
@@ -152,19 +152,19 @@ export function V2ScrollProjectGallery({ isRTL }: V2ScrollProjectGalleryProps) {
                         className="h-full w-full object-cover transition duration-700 group-hover:scale-[1.03]"
                         loading="lazy"
                       />
-                      <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-slate-900/65 via-transparent to-blue-500/10 opacity-80" />
-                      <span className="absolute bottom-4 start-4 inline-flex rounded-full border border-white/15 bg-slate-800/65 px-3 py-1 text-xs font-medium text-slate-100 backdrop-blur-md">
+                      <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-black/35 via-transparent to-primary/10 opacity-80 dark:from-slate-900/65" />
+                      <span className="absolute bottom-4 start-4 inline-flex rounded-full border border-border/70 bg-card/70 px-3 py-1 text-xs font-medium text-foreground backdrop-blur-md">
                         {t("v2Gallery.openHint")}
                       </span>
                     </div>
                   </button>
 
                   <div className="flex flex-1 flex-col justify-center px-1 md:px-8">
-                    <span className="text-xs font-semibold uppercase tracking-widest text-teal-200/80">
+                    <span className="text-xs font-semibold uppercase tracking-widest text-primary/70">
                       {t("v2Gallery.caseLabel", { n: String(index + 1) })}
                     </span>
-                    <h3 className="mt-2 text-2xl font-semibold text-slate-50 md:text-3xl">{title}</h3>
-                    <p className="mt-3 max-w-md text-sm leading-relaxed text-slate-200/70 md:text-base">{body}</p>
+                    <h3 className="mt-2 text-2xl font-semibold text-foreground md:text-3xl">{title}</h3>
+                    <p className="mt-3 max-w-md text-sm leading-relaxed text-muted-foreground md:text-base">{body}</p>
                   </div>
                 </div>
               )
@@ -186,17 +186,17 @@ export function V2ScrollProjectGallery({ isRTL }: V2ScrollProjectGalleryProps) {
           <Drawer.Viewport className="fixed inset-x-0 bottom-0 z-[201] flex max-h-[min(92dvh,920px)] justify-center overscroll-contain px-0 pt-6">
             <Drawer.Popup
               className={cn(
-                "v2-drawer-popup w-full max-w-lg rounded-t-2xl border border-white/10 bg-slate-900 shadow-2xl shadow-blue-500/15 outline-none transition-transform duration-300 ease-out"
+                "v2-drawer-popup w-full max-w-lg rounded-t-2xl border border-border/70 bg-background shadow-2xl shadow-black/15 outline-none transition-transform duration-300 ease-out"
               )}
             >
               <Drawer.Content className="max-h-[min(85dvh,820px)] overflow-y-auto rounded-t-2xl">
                 {activeItem ? (
                   <>
-                    <div className="sticky top-0 z-10 flex justify-end border-b border-white/5 bg-slate-900/95 px-3 py-2 backdrop-blur-md">
+                    <div className="sticky top-0 z-10 flex justify-end border-b border-border/60 bg-background/92 px-3 py-2 backdrop-blur-md">
                       <Drawer.Close
                         type="button"
                         aria-label={t("v2Gallery.dialog.close")}
-                        className="flex h-9 w-9 items-center justify-center rounded-full border border-white/12 bg-slate-800/90 text-slate-200 transition hover:bg-slate-700"
+                        className="flex h-9 w-9 items-center justify-center rounded-full border border-border/70 bg-card/70 text-foreground/80 transition hover:bg-card"
                       >
                         <X className="h-4 w-4" />
                       </Drawer.Close>
@@ -207,18 +207,18 @@ export function V2ScrollProjectGallery({ isRTL }: V2ScrollProjectGalleryProps) {
                     </div>
 
                     <div className="space-y-3 p-6 pb-8">
-                      <Drawer.Title className="text-xl font-semibold text-slate-50" id="v2-drawer-title">
+                      <Drawer.Title className="text-xl font-semibold text-foreground" id="v2-drawer-title">
                         {t(`v2Gallery.items.item${activeItem.index}.title`)}
                       </Drawer.Title>
-                      <Drawer.Description className="text-sm leading-relaxed text-slate-200/75">
+                      <Drawer.Description className="text-sm leading-relaxed text-muted-foreground">
                         {t(`v2Gallery.items.item${activeItem.index}.body`)}
                       </Drawer.Description>
-                      <p className="text-xs text-slate-400">{t("v2Gallery.dialog.hint")}</p>
+                      <p className="text-xs text-muted-foreground">{t("v2Gallery.dialog.hint")}</p>
                       <a
                         href="https://example.com"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 rounded-full bg-blue-500 px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-blue-500/25 transition hover:bg-blue-400"
+                        className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/25 transition hover:opacity-95"
                       >
                         {t("v2Gallery.dialog.cta")}
                         <ExternalLink className="h-4 w-4" />

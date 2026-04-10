@@ -49,11 +49,11 @@ export default function Contact() {
   const toggleLanguage = () => i18n.changeLanguage(isRTL ? "en" : "ar")
 
   return (
-    <div ref={rootRef} className="relative min-h-screen overflow-x-hidden bg-slate-900 text-slate-50">
+    <div ref={rootRef} className="relative min-h-screen overflow-x-hidden bg-background text-foreground">
       <style>{`
         .glass-panel {
-          background: rgba(30, 41, 59, 0.72);
-          border: 1px solid rgba(255, 255, 255, 0.12);
+          background: oklch(from var(--card) l c h / 0.72);
+          border: 1px solid oklch(from var(--border) l c h / 0.7);
           backdrop-filter: blur(18px);
         }
       `}</style>
@@ -62,7 +62,7 @@ export default function Contact() {
 
       <main className="relative z-10 px-4 pb-24 pt-14 md:px-8 md:pt-20">
         <section className="mx-auto max-w-7xl">
-          <div className="relative overflow-hidden rounded-[2.5rem] border border-white/12 bg-slate-800/50 p-8 shadow-xl shadow-blue-500/10 md:p-14">
+          <div className="relative overflow-hidden rounded-[2.5rem] border border-border/70 bg-card/60 p-8 shadow-xl shadow-black/10 md:p-14">
             <div
               className="pointer-events-none absolute inset-0"
               style={{
@@ -75,43 +75,43 @@ export default function Contact() {
               <div>
                 <p
                   data-contact-anim="true"
-                  className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-slate-800/45 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-blue-200"
+                  className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-card/60 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-primary/90"
                 >
                   <Sparkles className="h-3.5 w-3.5" />
                   {t("contact.badge")}
                 </p>
 
-                <h1 data-contact-anim="true" className="mt-5 text-balance text-4xl font-semibold text-slate-50 md:text-6xl">
+                <h1 data-contact-anim="true" className="mt-5 text-balance text-4xl font-semibold text-foreground md:text-6xl">
                   {t("contact.title")}
                 </h1>
-                <p data-contact-anim="true" className="mt-5 max-w-xl text-pretty text-base leading-relaxed text-slate-200/70 md:text-lg">
+                <p data-contact-anim="true" className="mt-5 max-w-xl text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
                   {t("contact.subtitle")}
                 </p>
 
                 <div className="mt-10 grid gap-3">
                   <div data-contact-anim="true" className="glass-panel flex items-start gap-3 rounded-2xl px-5 py-4">
-                    <Mail className="mt-0.5 h-5 w-5 text-blue-200" />
+                    <Mail className="mt-0.5 h-5 w-5 text-primary/90" />
                     <div>
-                      <p className="text-sm font-semibold text-slate-50">{t("contact.emailLabel")}</p>
-                      <a className="text-sm text-slate-200/70 hover:text-blue-200" href="mailto:hello@amtar.sa">
+                      <p className="text-sm font-semibold text-foreground">{t("contact.emailLabel")}</p>
+                      <a className="text-sm text-muted-foreground hover:text-primary" href="mailto:hello@amtar.sa">
                         hello@amtar.sa
                       </a>
                     </div>
                   </div>
                   <div data-contact-anim="true" className="glass-panel flex items-start gap-3 rounded-2xl px-5 py-4">
-                    <PhoneCall className="mt-0.5 h-5 w-5 text-teal-200" />
+                    <PhoneCall className="mt-0.5 h-5 w-5 text-primary/90" />
                     <div>
-                      <p className="text-sm font-semibold text-slate-50">{t("contact.phoneLabel")}</p>
-                      <a className="text-sm text-slate-200/70 hover:text-blue-200" href="tel:+966500000000">
+                      <p className="text-sm font-semibold text-foreground">{t("contact.phoneLabel")}</p>
+                      <a className="text-sm text-muted-foreground hover:text-primary" href="tel:+966500000000">
                         +966 50 000 0000
                       </a>
                     </div>
                   </div>
                   <div data-contact-anim="true" className="glass-panel flex items-start gap-3 rounded-2xl px-5 py-4">
-                    <MapPin className="mt-0.5 h-5 w-5 text-cyan-200" />
+                    <MapPin className="mt-0.5 h-5 w-5 text-primary/90" />
                     <div>
-                      <p className="text-sm font-semibold text-slate-50">{t("contact.locationLabel")}</p>
-                      <p className="text-sm text-slate-200/70">{t("contact.locationValue")}</p>
+                      <p className="text-sm font-semibold text-foreground">{t("contact.locationLabel")}</p>
+                      <p className="text-sm text-muted-foreground">{t("contact.locationValue")}</p>
                     </div>
                   </div>
                 </div>
@@ -129,45 +129,45 @@ export default function Contact() {
                   }}
                 >
                   <div className="grid gap-2">
-                    <label className="text-sm font-medium text-slate-200">{t("contact.form.name")}</label>
+                    <label className="text-sm font-medium text-foreground/80">{t("contact.form.name")}</label>
                     <input
                       required
-                      className="h-11 rounded-xl border border-white/12 bg-slate-800/45 px-4 text-sm text-slate-100 outline-none placeholder:text-slate-400 focus:border-blue-400/40 focus:ring-2 focus:ring-blue-500/20"
+                      className="h-11 rounded-xl border border-border/70 bg-card/60 px-4 text-sm text-foreground outline-none placeholder:text-muted-foreground focus:border-primary/50 focus:ring-2 focus:ring-ring/30"
                       name="name"
                       placeholder={t("contact.form.namePlaceholder")}
                     />
                   </div>
 
                   <div className="grid gap-2">
-                    <label className="text-sm font-medium text-slate-200">{t("contact.form.email")}</label>
+                    <label className="text-sm font-medium text-foreground/80">{t("contact.form.email")}</label>
                     <input
                       required
                       type="email"
-                      className="h-11 rounded-xl border border-white/12 bg-slate-800/45 px-4 text-sm text-slate-100 outline-none placeholder:text-slate-400 focus:border-blue-400/40 focus:ring-2 focus:ring-blue-500/20"
+                      className="h-11 rounded-xl border border-border/70 bg-card/60 px-4 text-sm text-foreground outline-none placeholder:text-muted-foreground focus:border-primary/50 focus:ring-2 focus:ring-ring/30"
                       name="email"
                       placeholder={t("contact.form.emailPlaceholder")}
                     />
                   </div>
 
                   <div className="grid gap-2">
-                    <label className="text-sm font-medium text-slate-200">{t("contact.form.message")}</label>
+                    <label className="text-sm font-medium text-foreground/80">{t("contact.form.message")}</label>
                     <textarea
                       required
-                      className="min-h-32 resize-none rounded-xl border border-white/12 bg-slate-800/45 px-4 py-3 text-sm leading-relaxed text-slate-100 outline-none placeholder:text-slate-400 focus:border-blue-400/40 focus:ring-2 focus:ring-blue-500/20"
+                      className="min-h-32 resize-none rounded-xl border border-border/70 bg-card/60 px-4 py-3 text-sm leading-relaxed text-foreground outline-none placeholder:text-muted-foreground focus:border-primary/50 focus:ring-2 focus:ring-ring/30"
                       name="message"
                       placeholder={t("contact.form.messagePlaceholder")}
                     />
                   </div>
 
                   <div className="mt-2 flex flex-wrap items-center gap-3">
-                    <Button className="h-11 rounded-full bg-blue-500 px-7 text-white shadow-lg shadow-blue-500/30" type="submit">
+                    <Button className="h-11 rounded-full bg-primary px-7 text-primary-foreground shadow-lg shadow-primary/25" type="submit">
                       {t("contact.form.submit")}
                     </Button>
                     <a
                       href="mailto:hello@amtar.sa?subject=Amtar%20Inquiry"
                       className={cn(
                         buttonVariants({ variant: "outline" }),
-                        "h-11 rounded-full border-white/15 bg-slate-800/45 px-7 text-teal-200 hover:bg-slate-800/60"
+                        "h-11 rounded-full border-border/70 bg-card/60 px-7 text-foreground/80 hover:bg-card/80 hover:text-foreground"
                       )}
                     >
                       {t("contact.form.emailUs")}
@@ -175,7 +175,7 @@ export default function Contact() {
                   </div>
 
                   {status === "sent" ? (
-                    <motion.p initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="mt-3 text-sm text-teal-200/90">
+                <motion.p initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="mt-3 text-sm text-primary/90">
                       {t("contact.form.sent")}
                     </motion.p>
                   ) : null}

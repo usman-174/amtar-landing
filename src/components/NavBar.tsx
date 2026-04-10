@@ -1,12 +1,14 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom"
-import { Globe2, Menu, X } from "lucide-react"
+import { Globe2, Menu, Moon, Sun, X } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import gsap from "gsap"
+import { AnimatePresence, motion } from "framer-motion"
 
 import { Button, buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { useMotionPolicy } from "@/hooks/useMotionPolicy"
+import { useTheme } from "@/components/theme-provider"
 
 type NavItem = {
   key: string
@@ -27,8 +29,15 @@ export function NavBar({
   const { t, i18n } = useTranslation()
   const isRTL = i18n.language.startsWith("ar")
   const { shouldRunHeavyAnimations } = useMotionPolicy()
+  const { theme, setTheme } = useTheme()
   const location = useLocation()
   const navigate = useNavigate()
+
+  const resolvedIsDark =
+    theme === "dark" ||
+    (theme === "system" &&
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches)
 
   const items: NavItem[] = useMemo(
     () => [
@@ -120,11 +129,11 @@ export function NavBar({
   }, [shouldRunHeavyAnimations])
 
   return (
-    <header ref={rootRef} className="sticky top-0 z-50 border-b border-white/10 bg-slate-900/80 backdrop-blur-xl">
+    <header ref={rootRef} className="sticky top-0 z-50 border-b border-border/60 bg-background/70 backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 md:px-8">
         <Link to="/" className="group flex items-center gap-3">
           <img src="/images/amtar-logo.png" alt="Amtar" className="h-10 w-auto" />
-          <span className="text-sm font-semibold tracking-wide text-slate-200 transition group-hover:text-white">
+          <span className="text-sm font-semibold tracking-wide text-foreground/80 transition group-hover:text-foreground">
             Amtar
           </span>
         </Link>
@@ -132,12 +141,12 @@ export function NavBar({
         <div className="hidden items-center gap-2 md:flex">
           <div
             ref={railRef}
-            className="relative flex items-center gap-1 rounded-full border border-white/12 bg-slate-800/50 p-1 text-sm text-slate-200 shadow-sm"
+            className="relative flex items-center gap-1 rounded-full border border-border/70 bg-card/60 p-1 text-sm text-foreground/80 shadow-sm"
           >
             <div
               ref={pillRef}
               aria-hidden="true"
-              className="pointer-events-none absolute bottom-1 top-1 rounded-full bg-gradient-to-r from-blue-600 to-teal-500 opacity-0"
+              className="pointer-events-none absolute bottom-1 top-1 rounded-full bg-gradient-to-r from-primary to-cyan-500 opacity-0"
               style={{ filter: "blur(0px)" }}
             />
 
@@ -149,7 +158,7 @@ export function NavBar({
                   data-nav-item="true"
                   className={({ isActive }) =>
                     `relative z-10 rounded-full px-4 py-2 transition ${
-                      isActive ? "text-white" : "hover:text-white"
+                      isActive ? "text-foreground" : "hover:text-foreground"
                     }`
                   }
                 >
@@ -161,7 +170,7 @@ export function NavBar({
                   type="button"
                   data-nav-item="true"
                   onClick={() => runToSection(item.to)}
-                  className="relative z-10 rounded-full px-4 py-2 transition hover:text-white"
+                  className="relative z-10 rounded-full px-4 py-2 transition hover:text-foreground"
                 >
                   {item.label}
                 </button>
@@ -171,9 +180,56 @@ export function NavBar({
         </div>
 
         <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setTheme(resolvedIsDark ? "light" : "dark")}
+            className={cn(
+              "relative inline-flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border border-border/70 bg-card/60 text-foreground/80 shadow-sm outline-none transition hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50",
+              shouldRunHeavyAnimations && "hover:bg-card/80"
+            )}
+            aria-label={resolvedIsDark ? "Switch to light mode" : "Switch to dark mode"}
+          >
+            <motion.div
+              className="absolute inset-0"
+              initial={false}
+              animate={{
+                background:
+                  theme === "dark"
+                    ? "radial-gradient(circle at 30% 30%, rgba(56,189,248,0.18), transparent 60%)"
+                    : "radial-gradient(circle at 30% 30%, rgba(59,130,246,0.18), transparent 60%)",
+              }}
+              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            />
+            <AnimatePresence initial={false} mode="wait">
+              {resolvedIsDark ? (
+                <motion.div
+                  key="sun"
+                  initial={{ opacity: 0, rotate: -60, scale: 0.7 }}
+                  animate={{ opacity: 1, rotate: 0, scale: 1 }}
+                  exit={{ opacity: 0, rotate: 60, scale: 0.7 }}
+                  transition={{ duration: 0.22, ease: "easeOut" }}
+                  className="relative"
+                >
+                  <Sun className="h-4 w-4" />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="moon"
+                  initial={{ opacity: 0, rotate: 60, scale: 0.7 }}
+                  animate={{ opacity: 1, rotate: 0, scale: 1 }}
+                  exit={{ opacity: 0, rotate: -60, scale: 0.7 }}
+                  transition={{ duration: 0.22, ease: "easeOut" }}
+                  className="relative"
+                >
+                  <Moon className="h-4 w-4" />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </button>
+
           <Button
             variant="outline"
-            className="rounded-full border-white/15 bg-slate-800/45 px-5 text-blue-200 hover:bg-slate-800/60"
+            className="rounded-full border-border/70 bg-card/60 px-5 text-foreground/80 hover:bg-card/80"
             onClick={onToggleLanguage}
           >
             <Globe2 className="mr-2 h-4 w-4" />
@@ -184,7 +240,7 @@ export function NavBar({
             to="/contact"
             className={cn(
               buttonVariants({ variant: "default" }),
-              "hidden rounded-full bg-blue-500 px-6 text-white shadow-lg shadow-blue-500/30 md:inline-flex"
+              "hidden rounded-full bg-primary px-6 text-primary-foreground shadow-lg shadow-primary/25 md:inline-flex"
             )}
           >
             {t("nav.contactCta")}
@@ -193,7 +249,7 @@ export function NavBar({
           <button
             type="button"
             onClick={() => setMobileOpen((v) => !v)}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/12 bg-slate-800/50 text-slate-200 shadow-sm md:hidden"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border/70 bg-card/60 text-foreground/80 shadow-sm md:hidden"
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
           >
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -202,7 +258,7 @@ export function NavBar({
       </div>
 
       {mobileOpen ? (
-        <div className="border-t border-white/10 bg-slate-900/90 backdrop-blur-xl md:hidden">
+        <div className="border-t border-border/60 bg-background/80 backdrop-blur-xl md:hidden">
           <div className="mx-auto max-w-7xl px-4 py-4">
             <div className="grid gap-2">
               {items.map((item) =>
@@ -211,7 +267,7 @@ export function NavBar({
                     key={item.key}
                     to={item.to}
                     onClick={() => setMobileOpen(false)}
-                    className="rounded-2xl border border-white/12 bg-slate-800/55 px-4 py-3 text-sm font-medium text-slate-100 shadow-sm"
+                    className="rounded-2xl border border-border/70 bg-card/60 px-4 py-3 text-sm font-medium text-foreground shadow-sm"
                   >
                     {item.label}
                   </Link>
@@ -223,7 +279,7 @@ export function NavBar({
                       setMobileOpen(false)
                       runToSection(item.to)
                     }}
-                    className="rounded-2xl border border-white/12 bg-slate-800/55 px-4 py-3 text-left text-sm font-medium text-slate-100 shadow-sm"
+                    className="rounded-2xl border border-border/70 bg-card/60 px-4 py-3 text-left text-sm font-medium text-foreground shadow-sm"
                   >
                     {item.label}
                   </button>

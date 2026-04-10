@@ -6,6 +6,18 @@ const CURTAIN_CSS = `
   font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
   -webkit-font-smoothing: antialiased;
 }
+.intro-curtain-headline {
+  /* Light mode */
+  background: linear-gradient(180deg, oklch(0.32 0.12 255) 0%, rgba(59, 130, 246, 0.85) 55%, rgba(6, 182, 212, 0.75) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 12px 40px rgba(11, 59, 255, 0.18));
+}
+.dark .intro-curtain-headline {
+  background: linear-gradient(180deg, #f8fafc 0%, rgba(96, 165, 250, 0.75) 55%, rgba(45, 212, 191, 0.55) 100%);
+  filter: drop-shadow(0 12px 40px rgba(11, 59, 255, 0.22));
+}
 .intro-curtain-grid {
   background-size: 60px 60px;
   background-image:
@@ -14,29 +26,37 @@ const CURTAIN_CSS = `
   mask-image: linear-gradient(to bottom, transparent, black 14%, black 88%, transparent);
   -webkit-mask-image: linear-gradient(to bottom, transparent, black 14%, black 88%, transparent);
 }
+.dark .intro-curtain-grid {
+  background-image:
+    linear-gradient(to right, rgba(148, 163, 184, 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(148, 163, 184, 0.07) 1px, transparent 1px);
+}
+.intro-curtain-grid {
+  /* Slightly darker grid lines in light mode */
+  background-image:
+    linear-gradient(to right, rgba(15, 23, 42, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(15, 23, 42, 0.06) 1px, transparent 1px);
+}
 .intro-curtain-giant {
   font-size: min(24vw, 13rem);
   line-height: 0.78;
   font-weight: 900;
   letter-spacing: -0.06em;
   color: transparent;
-  -webkit-text-stroke: 1px rgba(148, 163, 184, 0.12);
-  background: linear-gradient(180deg, rgba(226, 232, 240, 0.12) 0%, transparent 62%);
+  -webkit-text-stroke: 1px rgba(15, 23, 42, 0.12);
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.10) 0%, transparent 62%);
   -webkit-background-clip: text;
   background-clip: text;
   opacity: 0.65;
 }
-.intro-curtain-headline {
-  background: linear-gradient(180deg, #f8fafc 0%, rgba(96, 165, 250, 0.75) 55%, rgba(45, 212, 191, 0.55) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  filter: drop-shadow(0 12px 40px rgba(11, 59, 255, 0.22));
+.dark .intro-curtain-giant {
+  -webkit-text-stroke: 1px rgba(148, 163, 184, 0.12);
+  background: linear-gradient(180deg, rgba(226, 232, 240, 0.12) 0%, transparent 62%);
 }
 .intro-curtain-glass-btn {
-  background: rgba(30, 41, 59, 0.82);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 20px 50px rgba(11, 59, 255, 0.12);
+  background: oklch(from var(--card) l c h / 0.8);
+  border: 1px solid oklch(from var(--border) l c h / 0.75);
+  box-shadow: 0 20px 50px rgba(11, 59, 255, 0.10);
 }
 @keyframes curtain-robot-float {
   0%, 100% { transform: translateY(0); }
@@ -203,20 +223,20 @@ export function LandingIntroCurtain({ onDismiss }: { onDismiss?: () => void }) {
   return (
     <div
       ref={rootRef}
-      className="intro-curtain-root fixed inset-0 z-[100] flex flex-col overflow-hidden bg-slate-900 text-slate-50"
+      className="intro-curtain-root fixed inset-0 z-[100] flex flex-col overflow-hidden bg-background text-foreground dark:bg-slate-900 dark:text-slate-50"
       style={{ transform: "translate3d(0,0,0)", willChange: "transform" }}
       aria-hidden={false}
     >
       <style>{CURTAIN_CSS}</style>
 
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -left-32 top-12 h-72 w-72 rounded-full bg-blue-500/25 blur-3xl" />
-        <div className="absolute -right-24 top-40 h-72 w-72 rounded-full bg-teal-400/18 blur-3xl" />
-        <div className="absolute bottom-0 left-1/2 h-[50vh] w-[90vw] -translate-x-1/2 rounded-[50%] bg-blue-600/15 blur-[100px]" />
+        <div className="absolute -left-32 top-12 h-72 w-72 rounded-full bg-blue-500/12 blur-3xl dark:bg-blue-500/25" />
+        <div className="absolute -right-24 top-40 h-72 w-72 rounded-full bg-cyan-500/10 blur-3xl dark:bg-teal-400/18" />
+        <div className="absolute bottom-0 left-1/2 h-[50vh] w-[90vw] -translate-x-1/2 rounded-[50%] bg-blue-600/10 blur-[100px] dark:bg-blue-600/15" />
       </div>
 
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-0 bg-slate-900" />
+        <div className="absolute inset-0 bg-background dark:bg-slate-900" />
         <div className="absolute inset-x-[-6%] bottom-0 top-[4%] flex items-end justify-center sm:inset-x-0">
           <img
             src="/images/constructionRobot.png"
@@ -226,19 +246,19 @@ export function LandingIntroCurtain({ onDismiss }: { onDismiss?: () => void }) {
           />
         </div>
         <div
-          className="absolute inset-0 bg-gradient-to-b from-slate-900 via-slate-900/55 to-slate-900/15"
+          className="absolute inset-0 bg-gradient-to-b from-background via-background/55 to-background/15 dark:from-slate-900 dark:via-slate-900/55 dark:to-slate-900/15"
           aria-hidden
         />
         <div
-          className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/25 to-slate-900/75"
+          className="absolute inset-0 bg-gradient-to-t from-background via-background/25 to-background/75 dark:from-slate-900 dark:via-slate-900/25 dark:to-slate-900/75"
           aria-hidden
         />
         <div
-          className="absolute inset-0 bg-[radial-gradient(ellipse_90%_70%_at_50%_18%,rgba(15,23,42,0.88),transparent_55%)]"
+          className="absolute inset-0 bg-[radial-gradient(ellipse_90%_70%_at_50%_18%,rgba(241,245,249,0.9),transparent_55%)] dark:bg-[radial-gradient(ellipse_90%_70%_at_50%_18%,rgba(15,23,42,0.88),transparent_55%)]"
           aria-hidden
         />
         <div
-          className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_92%,rgba(11,59,255,0.14),transparent_55%)]"
+          className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_92%,rgba(11,59,255,0.10),transparent_55%)] dark:bg-[radial-gradient(ellipse_80%_50%_at_50%_92%,rgba(11,59,255,0.14),transparent_55%)]"
           aria-hidden
         />
         <div className="intro-curtain-grid absolute inset-0 opacity-80" aria-hidden />
@@ -254,34 +274,34 @@ export function LandingIntroCurtain({ onDismiss }: { onDismiss?: () => void }) {
         <h1 className="intro-curtain-headline text-center text-5xl font-black tracking-tighter md:text-7xl lg:text-8xl">
           {t("footerCinematic.ready")}
         </h1>
-        <p className="mt-6 max-w-lg text-center text-sm leading-relaxed text-slate-200/75 md:text-base">
+        <p className="mt-6 max-w-lg text-center text-sm leading-relaxed text-muted-foreground dark:text-slate-200/75 md:text-base">
           {t("home.intro.subhead")}
         </p>
 
         <div ref={hintRef} className="mt-10 flex flex-col items-center gap-2">
-          <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-400 md:text-xs">
+          <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-muted-foreground md:text-xs">
             {t("home.intro.scrollHint")}
           </span>
           <button
             type="button"
             onClick={nudgePeel}
-            className="flex h-10 w-6 items-start justify-center rounded-full border border-white/12 bg-slate-800/40 pt-2 transition hover:border-blue-400/35 hover:bg-slate-800/55"
+            className="flex h-10 w-6 items-start justify-center rounded-full border border-border/70 bg-card/60 pt-2 transition hover:border-primary/35 hover:bg-card/80"
             aria-label={t("home.intro.scrollHint")}
           >
-            <span className="block h-2 w-2 rounded-full bg-blue-300/90" />
+            <span className="block h-2 w-2 rounded-full bg-primary/80" />
           </button>
         </div>
       </div>
 
       <div className="relative z-20 flex w-full flex-col items-center gap-6 px-6 pb-10 md:flex-row md:items-center md:justify-between md:px-12">
-        <p className="text-center text-[10px] font-semibold uppercase tracking-[0.28em] text-slate-400 md:text-start md:text-xs">
+        <p className="text-center text-[10px] font-semibold uppercase tracking-[0.28em] text-muted-foreground md:text-start md:text-xs">
           {t("footerPremium.rights")}
         </p>
 
         <button
           type="button"
           onClick={nudgePeel}
-          className="intro-curtain-glass-btn flex h-12 w-12 items-center justify-center rounded-full text-teal-200/90 transition hover:border-white/20 hover:text-white"
+          className="intro-curtain-glass-btn flex h-12 w-12 items-center justify-center rounded-full text-foreground/80 transition hover:border-primary/25 hover:text-foreground"
           aria-label={t("home.intro.scrollHint")}
         >
           <svg
@@ -295,7 +315,7 @@ export function LandingIntroCurtain({ onDismiss }: { onDismiss?: () => void }) {
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth="2"
-              d="M5 10l7-7m0 0l7 7m-7-7v18"
+              d="M19 14l-7 7m0 0l-7-7m7 7V3"
             />
           </svg>
         </button>

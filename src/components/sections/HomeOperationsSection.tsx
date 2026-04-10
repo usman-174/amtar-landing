@@ -46,11 +46,11 @@ export const HomeOperationsSection = forwardRef<HTMLElement>(function HomeOperat
         <div className="mt-12 grid gap-6 md:grid-cols-3">
           {operationCards.map((card, index) => (
             <MagneticCard key={card.title} className="ops-card p-7">
-              <div className="mb-4 inline-flex rounded-xl bg-blue-500/15 p-2 text-blue-200">
+              <div className="mb-4 inline-flex rounded-xl bg-primary/10 p-2 text-primary/85">
                 {index === 0 ? <Building2 className="h-5 w-5" /> : index === 1 ? <BarChart3 className="h-5 w-5" /> : <Layers3 className="h-5 w-5" />}
               </div>
-              <h3 className="text-xl font-semibold text-slate-50">{card.title}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-slate-200/70">{card.body}</p>
+              <h3 className="text-xl font-semibold text-foreground">{card.title}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{card.body}</p>
             </MagneticCard>
           ))}
         </div>
@@ -58,12 +58,12 @@ export const HomeOperationsSection = forwardRef<HTMLElement>(function HomeOperat
         <div className="mt-14 grid gap-4 md:grid-cols-3">
           {steps.map((step, index) => (
             <MagneticCard key={step.title} className="success-step p-6">
-              <div className="flex items-center gap-3 text-sm font-medium text-blue-200">
-                <span className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-blue-500/10">{index + 1}</span>
+              <div className="flex items-center gap-3 text-sm font-medium text-primary/85">
+                <span className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-border/70 bg-primary/10">{index + 1}</span>
                 {step.title}
               </div>
-              <p className="mt-4 text-sm leading-relaxed text-slate-200/70">{step.body}</p>
-              <p className="mt-5 text-xs font-semibold uppercase tracking-[0.12em] text-teal-200/90">{step.kpi}</p>
+              <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{step.body}</p>
+              <p className="mt-5 text-xs font-semibold uppercase tracking-[0.12em] text-primary/80">{step.kpi}</p>
             </MagneticCard>
           ))}
         </div>

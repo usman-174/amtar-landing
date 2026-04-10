@@ -45,7 +45,7 @@ export function MagneticCard({ children, className }: { children: React.ReactNod
     <div
       ref={cardRef}
       className={cn(
-        "group relative overflow-hidden rounded-3xl border border-white/12 bg-slate-800/50 backdrop-blur-xl transition-transform duration-200 will-change-transform",
+        "group relative overflow-hidden rounded-3xl border border-border/70 bg-card/70 backdrop-blur-xl transition-transform duration-200 will-change-transform",
         className
       )}
       style={{ boxShadow: "0 24px 80px rgba(11,59,255,0.14)" }}
@@ -368,17 +368,17 @@ export function SectionHeading({
       {kicker ? (
         <p
           data-animate="fade-up"
-          className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/12 bg-slate-800/50 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-blue-200"
+          className="mb-3 inline-flex items-center gap-2 rounded-full border border-border/70 bg-card/60 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-primary/85"
         >
           <Sparkles className="h-3.5 w-3.5" />
           {kicker}
         </p>
       ) : null}
-      <h2 data-animate="fade-up" className="text-balance text-3xl font-semibold md:text-5xl" style={{ color: palette.textPrimary }}>
+      <h2 data-animate="fade-up" className="text-balance text-3xl font-semibold text-foreground md:text-5xl">
         {title}
       </h2>
       {subtitle ? (
-        <p data-animate="fade-up" className="mt-4 text-pretty text-sm leading-relaxed md:text-lg" style={{ color: palette.textSecondary }}>
+        <p data-animate="fade-up" className="mt-4 text-pretty text-sm leading-relaxed text-muted-foreground md:text-lg">
           {subtitle}
         </p>
       ) : null}

@@ -33,8 +33,8 @@ export const HomePhoneSection = forwardRef<HTMLElement, Props>(function HomePhon
           />
           <ul className="mt-8 space-y-4">
             {mobilePoints.map((point) => (
-              <li key={point} className="phone-block flex items-start gap-3 text-sm text-slate-200/80">
-                <Check className="mt-0.5 h-4 w-4 text-teal-200/90" />
+              <li key={point} className="phone-block flex items-start gap-3 text-sm text-muted-foreground">
+                <Check className="mt-0.5 h-4 w-4 text-primary/80" />
                 {point}
               </li>
             ))}

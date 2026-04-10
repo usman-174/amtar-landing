@@ -40,12 +40,12 @@ export const HomeTestimonialsSection = forwardRef<HTMLElement>(function HomeTest
                   <Star key={`${item.author}-star-${index}`} className="h-4 w-4 fill-current" />
                 ))}
               </div>
-              <p className="mt-4 text-sm leading-relaxed text-slate-200/80">"{item.quote}"</p>
-              <div className="mt-6 border-t border-white/10 pt-4">
-                <p className="font-semibold text-slate-50">{item.author}</p>
-                <p className="text-xs text-slate-200/60">{item.role}</p>
+              <p className="mt-4 text-sm leading-relaxed text-muted-foreground">"{item.quote}"</p>
+              <div className="mt-6 border-t border-border/60 pt-4">
+                <p className="font-semibold text-foreground">{item.author}</p>
+                <p className="text-xs text-muted-foreground">{item.role}</p>
                 <div className="mt-2 flex items-center justify-between gap-4">
-                  <p className="text-xs font-semibold text-blue-200">{item.company}</p>
+                  <p className="text-xs font-semibold text-primary/85">{item.company}</p>
                   <img src={item.logo} alt={item.company} className="h-7 w-auto object-contain opacity-90" loading="lazy" />
                 </div>
               </div>

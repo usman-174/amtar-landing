@@ -32,12 +32,12 @@ export const HomeInsightsSection = forwardRef<HTMLElement, Props>(function HomeI
           <div className="grid gap-4 md:grid-cols-3">
             {metrics.map((metric) => (
               <MagneticCard key={metric.label} className="insight-metric p-6">
-                <p className="text-xs uppercase tracking-[0.18em] text-slate-200/65">{metric.label}</p>
-                <p className="mt-4 text-4xl font-bold text-blue-200">
+                <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">{metric.label}</p>
+                <p className="mt-4 text-4xl font-bold text-primary">
                   {metric.value}
                   {metric.suffix}
                 </p>
-                <div className="mt-5 flex items-center text-xs text-teal-200/90">
+                <div className="mt-5 flex items-center text-xs text-primary/80">
                   <TrendingUp className="me-1 h-3.5 w-3.5" />
                   {t("home.liveTracking", { defaultValue: "Live tracking" })}
                 </div>
@@ -48,8 +48,8 @@ export const HomeInsightsSection = forwardRef<HTMLElement, Props>(function HomeI
           <MagneticCard className="p-8">
             <div className="flex items-center justify-between gap-6">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-200/70">{t("insights.title")}</p>
-                <p className="mt-2 max-w-sm text-sm leading-relaxed text-slate-200/65">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">{t("insights.title")}</p>
+                <p className="mt-2 max-w-sm text-sm leading-relaxed text-muted-foreground">
                   {t("home.radarBody", {
                     defaultValue:
                       "Monitor momentum across sales, quote conversion, and invoice velocity with a live radar that surfaces drift early.",
@@ -57,9 +57,9 @@ export const HomeInsightsSection = forwardRef<HTMLElement, Props>(function HomeI
                 </p>
                 <div className="mt-5 grid grid-cols-2 gap-3">
                   {bars.slice(0, 4).map((bar) => (
-                    <div key={bar.label} className="rounded-2xl border border-white/10 bg-slate-800/40 px-4 py-3">
-                      <p className="text-xs text-slate-200/65">{bar.label}</p>
-                      <p className="mt-1 text-lg font-semibold text-slate-50">{bar.value}</p>
+                    <div key={bar.label} className="rounded-2xl border border-border/70 bg-card/60 px-4 py-3">
+                      <p className="text-xs text-muted-foreground">{bar.label}</p>
+                      <p className="mt-1 text-lg font-semibold text-foreground">{bar.value}</p>
                     </div>
                   ))}
                 </div>

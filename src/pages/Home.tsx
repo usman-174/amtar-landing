@@ -24,7 +24,6 @@ import {
   HomeWorkflowSection,
 } from "@/components/sections"
 import { ParticleField } from "@/components/sections/home-primitives"
-import { palette } from "@/components/sections/home-data"
 import { useMotionPolicy } from "@/hooks/useMotionPolicy"
 
 gsap.registerPlugin(ScrollTrigger)
@@ -225,13 +224,12 @@ export default function Home() {
     <div
       ref={rootRef}
       dir={isRTL ? "rtl" : "ltr"}
-      className="relative min-h-screen overflow-x-hidden bg-slate-900"
-      style={{ color: palette.textPrimary }}
+      className="relative min-h-screen overflow-x-hidden bg-background text-foreground"
     >
       <style>{`
         .glass-panel {
-          background: rgba(30, 41, 59, 0.72);
-          border: 1px solid rgba(255, 255, 255, 0.12);
+          background: oklch(from var(--card) l c h / 0.72);
+          border: 1px solid oklch(from var(--border) l c h / 0.7);
           backdrop-filter: blur(18px);
         }
         .text-shadow-soft {

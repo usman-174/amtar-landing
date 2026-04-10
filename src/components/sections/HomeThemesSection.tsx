@@ -20,8 +20,8 @@ export const HomeThemesSection = forwardRef<HTMLElement>(function HomeThemesSect
             <MagneticCard key={theme.title} className="theme-card overflow-hidden p-0">
               <img src={theme.image} alt={theme.title} className="h-52 w-full object-cover" loading="lazy" />
               <div className="p-5">
-                <h3 className="text-lg font-semibold text-slate-50">{theme.title}</h3>
-                <p className="mt-2 text-sm text-slate-200/70">
+                <h3 className="text-lg font-semibold text-foreground">{theme.title}</h3>
+                <p className="mt-2 text-sm text-muted-foreground">
                   {t("home.themeCardBody", { defaultValue: "Designed for product-heavy construction catalogs." })}
                 </p>
               </div>
