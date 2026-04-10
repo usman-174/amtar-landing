@@ -12,10 +12,15 @@ const CURTAIN_CSS = `
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 12px 40px rgba(11, 59, 255, 0.18));
 }
 .dark .intro-curtain-headline {
   background: linear-gradient(180deg, #f8fafc 0%, rgba(96, 165, 250, 0.75) 55%, rgba(45, 212, 191, 0.55) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 12px 40px rgba(11, 59, 255, 0.22));
 }
 .intro-curtain-grid {
@@ -48,10 +53,14 @@ const CURTAIN_CSS = `
   -webkit-background-clip: text;
   background-clip: text;
   opacity: 0.65;
+  -webkit-text-fill-color: transparent;
 }
 .dark .intro-curtain-giant {
   -webkit-text-stroke: 1px rgba(148, 163, 184, 0.12);
   background: linear-gradient(180deg, rgba(226, 232, 240, 0.12) 0%, transparent 62%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 .intro-curtain-glass-btn {
   background: oklch(from var(--card) l c h / 0.8);
